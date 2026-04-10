@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>روبوت ثلاثي الأبعاد · نائم ثم ينهض · بروجيكتور كامل</title>
   <style>
-    /* === كل خصائص CSS بقيت كما هي تماماً دون أي نقصان أو تعديل === */
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
     * {
@@ -42,7 +41,6 @@
       z-index: 100;
     }
 
-    /* ========== الرأس ========== */
     .head {
       width: 180px;
       height: 145px;
@@ -58,23 +56,14 @@
       transform-origin: center 80%;
     }
 
-    /* وضعية النوم: الرأس منحني للأمام */
-    .head.sleeping {
-      transform: rotate(25deg);
-    }
-
-    /* وضعية النظر للأعلى (باتجاه الشاشة) */
-    .head.looking-up {
-      transform: rotate(-12deg);
-    }
+    .head.sleeping { transform: rotate(25deg); }
+    .head.looking-up { transform: rotate(-12deg); }
 
     .head::before {
       content: '';
       position: absolute;
-      top: 10px;
-      left: 25px;
-      width: 85px;
-      height: 45px;
+      top: 10px; left: 25px;
+      width: 85px; height: 45px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 50%, transparent 80%);
       border-radius: 50%;
       filter: blur(8px);
@@ -85,22 +74,17 @@
     .head::after {
       content: '';
       position: absolute;
-      bottom: 15px;
-      right: 18px;
-      width: 50px;
-      height: 30px;
+      bottom: 15px; right: 18px;
+      width: 50px; height: 30px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, rgba(200,220,255,0.2) 60%, transparent 90%);
       border-radius: 50%;
       filter: blur(6px);
       transform: rotate(20deg);
     }
 
-    /* ========== الأذنان - في منتصف الرأس وأكبر قليلاً ========== */
     .ear-module {
       position: absolute;
-      top: 55px;
-      width: 24px;
-      height: 45px;
+      top: 55px; width: 24px; height: 45px;
       z-index: 19;
     }
 
@@ -108,74 +92,42 @@
     .ear-module.right { right: -22px; }
 
     .ear-main {
-      width: 22px;
-      height: 36px;
-      background: radial-gradient(ellipse at 35% 30%, 
-        #8ab8e8 0%, 
-        #4a8ec5 40%, 
-        #2a6bb0 70%,
-        #1a4a8a 100%);
+      width: 22px; height: 36px;
+      background: radial-gradient(ellipse at 35% 30%, #8ab8e8 0%, #4a8ec5 40%, #2a6bb0 70%, #1a4a8a 100%);
       border-radius: 10px 10px 8px 8px;
-      box-shadow: 
-        0 5px 10px rgba(0, 0, 0, 0.5),
-        0 2px 5px rgba(0, 0, 0, 0.3),
-        inset -1px -2px 5px rgba(0, 0, 0, 0.35),
-        inset 3px 3px 8px rgba(255, 255, 255, 0.6),
-        inset -1px -1px 3px rgba(0, 0, 0, 0.2);
-      border-left: 1px solid rgba(255, 255, 255, 0.5);
-      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5), 0 2px 5px rgba(0,0,0,0.3), inset -1px -2px 5px rgba(0,0,0,0.35), inset 3px 3px 8px rgba(255,255,255,0.6), inset -1px -1px 3px rgba(0,0,0,0.2);
+      border-left: 1px solid rgba(255,255,255,0.5);
+      border-right: 1px solid rgba(0,0,0,0.15);
       position: relative;
       margin: 0;
     }
 
     .horn-pill {
-      width: 12px;
-      height: 26px;
-      background: linear-gradient(145deg, 
-        #6aacf0 0%, 
-        #3a7ec5 35%, 
-        #1a5aa0 70%,
-        #0e3d7a 100%);
+      width: 12px; height: 26px;
+      background: linear-gradient(145deg, #6aacf0 0%, #3a7ec5 35%, #1a5aa0 70%, #0e3d7a 100%);
       border-radius: 6px 6px 4px 4px;
       position: absolute;
       top: -20px;
-      box-shadow: 
-        0 3px 8px rgba(0, 0, 0, 0.5),
-        0 1px 3px rgba(0, 0, 0, 0.3),
-        inset -1px -1px 3px rgba(0, 0, 0, 0.3),
-        inset 1px 1px 5px rgba(255, 255, 255, 0.5);
-      border-left: 1px solid rgba(255, 255, 255, 0.4);
-      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.3), inset -1px -1px 3px rgba(0,0,0,0.3), inset 1px 1px 5px rgba(255,255,255,0.5);
+      border-left: 1px solid rgba(255,255,255,0.4);
+      border-right: 1px solid rgba(0,0,0,0.1);
     }
 
-    .ear-module.left .horn-pill {
-      left: 2px;
-      transform: rotate(-25deg);
-      transform-origin: bottom right;
-    }
-
-    .ear-module.right .horn-pill {
-      right: 2px;
-      transform: rotate(25deg);
-      transform-origin: bottom left;
-    }
+    .ear-module.left .horn-pill { left: 2px; transform: rotate(-25deg); transform-origin: bottom right; }
+    .ear-module.right .horn-pill { right: 2px; transform: rotate(25deg); transform-origin: bottom left; }
 
     .ear-main::before {
       content: '';
       position: absolute;
-      top: 4px;
-      left: 3px;
-      width: 7px;
-      height: 10px;
+      top: 4px; left: 3px;
+      width: 7px; height: 10px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 80%);
       border-radius: 50%;
       filter: blur(1.5px);
     }
 
-    /* الشاشة */
     .screen {
-      width: 155px;
-      height: 108px;
+      width: 155px; height: 108px;
       background: linear-gradient(145deg, #0e1218 0%, #080a0e 40%, #05070a 70%, #020305 100%);
       border-radius: 38px;
       display: flex;
@@ -191,8 +143,7 @@
     .screen::before {
       content: '';
       position: absolute;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       background: repeating-linear-gradient(45deg, rgba(0,242,255,0.04) 0px, rgba(0,242,255,0.04) 2px, transparent 2px, transparent 8px);
       animation: scan 8s linear infinite;
       border-radius: 38px;
@@ -201,10 +152,8 @@
     .screen::after {
       content: '';
       position: absolute;
-      top: 5px;
-      left: 10px;
-      width: 60px;
-      height: 30px;
+      top: 5px; left: 10px;
+      width: 60px; height: 30px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%);
       border-radius: 50%;
       filter: blur(5px);
@@ -218,8 +167,7 @@
 
     .bracket {
       position: absolute;
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       border: 2px solid #0cf;
       opacity: 0.9;
       filter: drop-shadow(0 0 6px #0cf) drop-shadow(0 0 12px rgba(0,204,255,0.5));
@@ -231,24 +179,19 @@
     .bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
     .br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
 
-    /* العيون */
     .eye {
-      width: 44px;
-      height: 32px;
+      width: 44px; height: 32px;
       position: relative;
       transform: translateY(10px);
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
-    /* العين المفتوحة */
     .eye::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       border: 5px solid #0cf;
       border-color: #0cf transparent transparent transparent;
       border-radius: 50%;
@@ -259,7 +202,6 @@
       transition: all 0.3s ease;
     }
 
-    /* العين المغلقة (للنوم) */
     .eye.closed::before {
       border: 5px solid #0cf;
       border-color: transparent transparent #0cf transparent;
@@ -269,7 +211,6 @@
       animation: none;
     }
 
-    /* العين تنظر للأعلى */
     .eye.looking-up::before {
       transform: scaleX(0.85) translateY(-4px);
       border-color: #0cf transparent transparent transparent;
@@ -278,11 +219,9 @@
     .eye::after {
       content: '';
       position: absolute;
-      bottom: -6px;
-      left: 50%;
+      bottom: -6px; left: 50%;
       transform: translateX(-50%);
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       background: radial-gradient(circle, #aaffff 0%, #0cf 50%, #0099cc 100%);
       border-radius: 50%;
       filter: blur(3px);
@@ -291,13 +230,8 @@
       transition: opacity 0.3s ease, bottom 0.3s ease;
     }
 
-    .eye.looking-up::after {
-      bottom: 0px;
-    }
-
-    .eye.closed::after {
-      opacity: 0;
-    }
+    .eye.looking-up::after { bottom: 0px; }
+    .eye.closed::after { opacity: 0; }
 
     @keyframes blink {
       0%, 94%, 100% { opacity: 1; transform: scaleY(1) scaleX(0.85); }
@@ -309,22 +243,17 @@
       50% { opacity: 1; transform: translateX(-50%) scale(1.4); }
     }
 
-    /* ========== علامة Zzz للنوم ========== */
     .sleep-zzz {
       position: absolute;
-      top: -40px;
-      right: -30px;
-      display: flex;
-      flex-direction: column;
+      top: -40px; right: -30px;
+      display: flex; flex-direction: column;
       align-items: center;
       opacity: 0;
       transition: opacity 0.5s ease;
       z-index: 25;
     }
 
-    .sleep-zzz.show {
-      opacity: 1;
-    }
+    .sleep-zzz.show { opacity: 1; }
 
     .z-letter {
       color: #0cf;
@@ -345,7 +274,6 @@
       50% { transform: translateY(-15px) rotate(5deg); }
     }
 
-    /* ========== الجسم ========== */
     .body-group {
       margin-top: -28px;
       position: relative;
@@ -356,9 +284,7 @@
 
     .head-to-body-shadow {
       position: absolute;
-      top: 0;
-      width: 110px;
-      height: 25px;
+      top: 0; width: 110px; height: 25px;
       background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 70%, transparent 100%);
       filter: blur(12px);
       z-index: 15;
@@ -366,8 +292,7 @@
     }
 
     .vest-blue {
-      width: 145px;
-      height: 95px;
+      width: 145px; height: 95px;
       background: radial-gradient(ellipse at 25% 25%, #8ab8ff 0%, #5a9ad5 30%, #2a6fcf 55%, #1a4a8a 80%, #0e2d5a 100%);
       border-radius: 55px 55px 40px 40px;
       z-index: 10;
@@ -382,10 +307,8 @@
     .vest-blue::before {
       content: '';
       position: absolute;
-      top: 10px;
-      left: 20px;
-      width: 50px;
-      height: 30px;
+      top: 10px; left: 20px;
+      width: 50px; height: 30px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
       border-radius: 50%;
       filter: blur(6px);
@@ -393,8 +316,7 @@
     }
 
     .reactor-core {
-      width: 45px;
-      height: 45px;
+      width: 45px; height: 45px;
       background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d4f4ff 30%, #8ae4ff 50%, #0cf 70%, #0099cc 100%);
       border-radius: 50%;
       box-shadow: 0 0 30px #0cf, 0 0 60px #0cf, inset 0 0 15px rgba(255,255,255,0.9), inset -2px -2px 8px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.4);
@@ -412,10 +334,8 @@
     .reactor-core::before {
       content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 18px;
-      height: 18px;
+      top: 50%; left: 50%;
+      width: 18px; height: 18px;
       background: radial-gradient(circle, #ffffff 0%, #aaffff 60%, transparent 100%);
       border-radius: 50%;
       transform: translate(-50%, -50%);
@@ -426,10 +346,8 @@
     .reactor-core::after {
       content: '';
       position: absolute;
-      top: -8px;
-      left: 10px;
-      width: 15px;
-      height: 8px;
+      top: -8px; left: 10px;
+      width: 15px; height: 8px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.7) 0%, transparent 80%);
       border-radius: 50%;
       filter: blur(3px);
@@ -447,8 +365,7 @@
     }
 
     .belly-white {
-      width: 125px;
-      height: 125px;
+      width: 125px; height: 125px;
       background: radial-gradient(ellipse at 30% 30%, #ffffff 0%, #e8f0fa 30%, #d0deef 55%, #b8c8e0 75%, #a0b4cc 100%);
       border-radius: 50% 50% 55% 55% / 45% 45% 55% 55%;
       margin-top: -65px;
@@ -460,40 +377,33 @@
     .belly-white::before {
       content: '';
       position: absolute;
-      top: 15px;
-      left: 20px;
-      width: 50px;
-      height: 35px;
+      top: 15px; left: 20px;
+      width: 50px; height: 35px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 90%);
       border-radius: 50%;
       filter: blur(8px);
       transform: rotate(-15deg);
     }
 
-    /* ========== الأذرع ========== */
     .arm {
       position: absolute;
-      width: 55px;
-      height: 105px;
+      width: 55px; height: 105px;
       z-index: 12;
       transform-origin: top center;
-      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
       transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
 
     .arm.waving { left: -44px; top: 25px; }
     .arm.idle { right: -44px; top: 25px; }
 
-    .arm.sleeping {
-      transition: transform 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
-    }
+    .arm.sleeping { transition: transform 0.8s cubic-bezier(0.34, 1.2, 0.64, 1); }
 
     .arm.waving.sleeping { transform: rotate(15deg) translateY(15px); }
     .arm.idle.sleeping { transform: rotate(-20deg) translateY(15px); }
 
     .shoulder-blue {
-      width: 100%;
-      height: 60%;
+      width: 100%; height: 60%;
       background: radial-gradient(ellipse at 30% 25%, #7ab0f0 0%, #4a8ad5 40%, #2a6fcf 70%, #1a4a8a 100%);
       border-radius: 55% 55% 45% 45%;
       box-shadow: 0 14px 22px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.3), inset -4px -5px 10px rgba(0,0,0,0.3), inset 6px 7px 15px rgba(255,255,255,0.6);
@@ -503,11 +413,9 @@
     .shoulder-blue::before {
       content: '';
       position: absolute;
-      bottom: -8px;
-      left: 50%;
+      bottom: -8px; left: 50%;
       transform: translateX(-50%);
-      width: 70%;
-      height: 12px;
+      width: 70%; height: 12px;
       background: radial-gradient(ellipse, #3a7bc0, #1a4a8a);
       border-radius: 50%;
       filter: blur(4px);
@@ -517,10 +425,8 @@
     .shoulder-blue::after {
       content: '';
       position: absolute;
-      top: 8px;
-      left: 10px;
-      width: 25px;
-      height: 15px;
+      top: 8px; left: 10px;
+      width: 25px; height: 15px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 80%);
       border-radius: 50%;
       filter: blur(4px);
@@ -528,8 +434,7 @@
     }
 
     .forearm-white {
-      width: 75%;
-      height: 45%;
+      width: 75%; height: 45%;
       background: radial-gradient(ellipse at 35% 30%, #f8fcff 0%, #e0ecf8 40%, #c8d8f0 70%, #b0c4e0 100%);
       border-radius: 35% 35% 50% 50%;
       margin: -8px auto 0;
@@ -541,11 +446,9 @@
     .forearm-white::before {
       content: '';
       position: absolute;
-      top: -5px;
-      left: 50%;
+      top: -5px; left: 50%;
       transform: translateX(-50%);
-      width: 80%;
-      height: 10px;
+      width: 80%; height: 10px;
       background: radial-gradient(ellipse, #d8e8f8, #b0c4e0);
       border-radius: 50%;
       box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
@@ -554,8 +457,7 @@
     .forearm-white::after {
       content: '';
       display: block;
-      width: 80%;
-      height: 16px;
+      width: 80%; height: 16px;
       background: linear-gradient(145deg, #c8daf0, #a0b8d0);
       border-radius: 20px;
       margin: 12px auto 0;
@@ -563,17 +465,11 @@
       transform: perspective(100px) rotateX(3deg);
     }
 
-    .arm.idle .forearm-white {
-      transform: perspective(200px) rotateX(5deg) rotateY(-3deg);
-    }
-
-    .arm.waving .forearm-white {
-      transform: perspective(200px) rotateX(5deg) rotateY(3deg);
-    }
+    .arm.idle .forearm-white { transform: perspective(200px) rotateX(5deg) rotateY(-3deg); }
+    .arm.waving .forearm-white { transform: perspective(200px) rotateX(5deg) rotateY(3deg); }
 
     .ground-shadow {
-      width: 180px;
-      height: 30px;
+      width: 180px; height: 30px;
       background: radial-gradient(ellipse, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
       border-radius: 50%;
       filter: blur(18px);
@@ -583,18 +479,15 @@
 
     .tech-particles {
       position: fixed;
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       pointer-events: none;
       z-index: 1;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
     }
 
     .particle {
       position: absolute;
-      width: 2px;
-      height: 2px;
+      width: 2px; height: 2px;
       background: #0cf;
       border-radius: 50%;
       opacity: 0;
@@ -611,8 +504,7 @@
 
     .tech-label {
       position: fixed;
-      bottom: 20px;
-      left: 50%;
+      bottom: 20px; left: 50%;
       transform: translateX(-50%);
       color: rgba(0, 242, 255, 0.9);
       font-family: 'Cairo', monospace;
@@ -635,33 +527,24 @@
       50% { transform: translate(-50%, -50%) scale(0.65) translateY(-20px); }
     }
 
-    .robot-container.float-active {
-      animation: floatAfter 3s ease-in-out infinite;
-    }
+    .robot-container.float-active { animation: floatAfter 3s ease-in-out infinite; }
 
-    /* ========== شاشة البروجيكتور ========== */
+    /* ===== شاشة البروجيكتور ===== */
     .hologram-screen {
       position: absolute;
-      top: 16%;
-      left: 50%;
+      top: 16%; left: 50%;
       transform: translateX(-50%) scale(0);
-      width: 380px;
-      min-height: 220px;
+      width: 380px; min-height: 220px;
       background: rgba(0, 242, 255, 0.04);
       backdrop-filter: blur(12px);
       border-radius: 30px;
       border: 1.5px solid rgba(0, 242, 255, 0.5);
-      box-shadow: 
-        0 0 60px rgba(0, 242, 255, 0.3),
-        0 0 120px rgba(0, 150, 255, 0.15),
-        inset 0 0 40px rgba(0, 242, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 0 60px rgba(0, 242, 255, 0.3), 0 0 120px rgba(0, 150, 255, 0.15), inset 0 0 40px rgba(0, 242, 255, 0.08);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       z-index: 200;
       opacity: 0;
-      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.6s ease;
+      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.6s ease, width 1s ease, height 1s ease, border-radius 1s ease, top 1s ease;
       pointer-events: none;
       padding: 24px 20px;
     }
@@ -670,6 +553,14 @@
       transform: translateX(-50%) scale(1);
       opacity: 1;
       pointer-events: auto;
+    }
+
+    .hologram-screen.fullscreen {
+      width: 94vw;
+      height: 85vh;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%) scale(1);
+      border-radius: 24px;
     }
 
     .hologram-screen::before {
@@ -701,6 +592,8 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
+      position: relative;
+      z-index: 2;
     }
 
     .holo-message {
@@ -734,7 +627,6 @@
       100% { text-shadow: 0 0 50px #5a9eff, 0 0 90px #aaffff; }
     }
 
-    /* ثلاث نقاط متحركة */
     .typing-indicator {
       display: flex;
       align-items: center;
@@ -744,8 +636,7 @@
     }
 
     .typing-dot {
-      width: 14px;
-      height: 14px;
+      width: 14px; height: 14px;
       background: #0cf;
       border-radius: 50%;
       box-shadow: 0 0 20px #0cf, 0 0 40px #0cf;
@@ -776,6 +667,7 @@
       transition: all 0.3s ease;
       margin-top: 10px;
       text-shadow: 0 0 12px #0cf;
+      font-family: 'Cairo', sans-serif;
     }
 
     .holo-button:hover {
@@ -785,31 +677,481 @@
       border-color: #aaffff;
     }
 
-    .holo-decoration {
-      position: absolute;
+    /* ===== خانة إدخال المفتاح ===== */
+    .key-input-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
       width: 100%;
-      height: 100%;
-      pointer-events: none;
+      max-width: 340px;
+      padding: 10px;
     }
 
-    .holo-corner {
+    .key-input-container label {
+      color: rgba(170, 255, 255, 0.9);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px rgba(0,204,255,0.5);
+    }
+
+    .key-input-field {
+      width: 100%;
+      padding: 14px 20px;
+      background: rgba(0, 242, 255, 0.06);
+      border: 1.5px solid rgba(0, 242, 255, 0.5);
+      border-radius: 16px;
+      color: #fff;
+      font-size: 18px;
+      font-family: 'Cairo', monospace;
+      letter-spacing: 4px;
+      text-align: center;
+      outline: none;
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
+      text-shadow: 0 0 8px #0cf;
+      direction: ltr;
+    }
+
+    .key-input-field::placeholder {
+      color: rgba(0, 242, 255, 0.3);
+      letter-spacing: 2px;
+      font-size: 14px;
+    }
+
+    .key-input-field:focus {
+      border-color: #0cf;
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.3), inset 0 0 15px rgba(0, 242, 255, 0.1);
+    }
+
+    .key-error {
+      color: #ff6b6b;
+      font-size: 14px;
+      text-shadow: 0 0 10px rgba(255,107,107,0.5);
+      min-height: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .key-error.show { opacity: 1; }
+
+    /* ===== بطاقة الإشارة ===== */
+    .signal-card-container {
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+    }
+
+    .signal-card {
+      background: linear-gradient(145deg, rgba(0,20,40,0.9), rgba(0,10,25,0.95));
+      border: 1.5px solid rgba(0, 242, 255, 0.6);
+      border-radius: 20px;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(0, 242, 255, 0.2), inset 0 0 30px rgba(0, 242, 255, 0.05);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .signal-card.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .signal-card::before {
+      content: '';
       position: absolute;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(0, 242, 255, 0.7);
-      filter: drop-shadow(0 0 8px #0cf);
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #0cf, #5a9eff, #0cf, transparent);
+      animation: shimmerTop 2s linear infinite;
     }
 
-    .hc-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
-    .hc-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
-    .hc-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
-    .hc-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+    @keyframes shimmerTop {
+      0% { background-position: -200px 0; }
+      100% { background-position: 200px 0; }
+    }
 
-    /* ========== شعاع البروجيكتور ========== */
+    .signal-card-header {
+      text-align: center;
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+      position: relative;
+    }
+
+    .signal-card-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0cf, transparent);
+    }
+
+    .signal-card-title {
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 20px #0cf, 0 0 40px rgba(0,204,255,0.4);
+      letter-spacing: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .signal-card-title .diamond-icon {
+      width: 28px; height: 28px;
+      filter: drop-shadow(0 0 10px #0cf);
+    }
+
+    .signal-card-body {
+      padding: 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .signal-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.08);
+    }
+
+    .signal-row:last-child { border-bottom: none; }
+
+    .signal-row-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(170, 255, 255, 0.85);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .signal-row-label .row-icon {
+      width: 18px; height: 18px;
+      filter: drop-shadow(0 0 5px #0cf);
+    }
+
+    .signal-row-value {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0,204,255,0.4);
+      direction: ltr;
+    }
+
+    .signal-row-value.buy {
+      color: #00ff88;
+      text-shadow: 0 0 15px rgba(0,255,136,0.5);
+    }
+
+    .signal-row-value.sell {
+      color: #ff4466;
+      text-shadow: 0 0 15px rgba(255,68,102,0.5);
+    }
+
+    .signal-card-footer {
+      text-align: center;
+      padding: 14px 20px 18px;
+      border-top: 1px solid rgba(0, 242, 255, 0.2);
+      position: relative;
+    }
+
+    .signal-card-footer::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0cf, transparent);
+    }
+
+    .signal-card-footer-text {
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffd700;
+      text-shadow: 0 0 15px rgba(255,215,0,0.5);
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .trophy-icon {
+      width: 22px; height: 22px;
+      filter: drop-shadow(0 0 8px rgba(255,215,0,0.6));
+    }
+
+    /* ===== شريط الأزرار السفلي ===== */
+    .bottom-nav {
+      position: absolute;
+      bottom: 16px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .bottom-nav.show { opacity: 1; }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 242, 255, 0.08);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      border-radius: 16px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 242, 255, 0.18);
+      border-color: #0cf;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .nav-btn svg {
+      width: 26px; height: 26px;
+      filter: drop-shadow(0 0 6px #0cf);
+    }
+
+    .nav-btn span {
+      color: rgba(170, 255, 255, 0.9);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    /* ===== صفحات الإشارات والنتائج ===== */
+    .page-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(3, 6, 12, 0.97);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      overflow-y: auto;
+    }
+
+    .page-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .page-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+      position: sticky;
+      top: 0;
+      background: rgba(3, 6, 12, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+
+    .page-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 15px #0cf;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .page-close-btn {
+      width: 40px; height: 40px;
+      background: rgba(255, 68, 102, 0.15);
+      border: 1px solid rgba(255, 68, 102, 0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .page-close-btn:hover {
+      background: rgba(255, 68, 102, 0.3);
+      box-shadow: 0 0 15px rgba(255, 68, 102, 0.4);
+    }
+
+    .page-close-btn svg {
+      width: 18px; height: 18px;
+    }
+
+    .page-body {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .signal-item {
+      background: linear-gradient(145deg, rgba(0,20,40,0.8), rgba(0,10,25,0.9));
+      border: 1px solid rgba(0, 242, 255, 0.25);
+      border-radius: 16px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+    }
+
+    .signal-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .signal-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .signal-item-pair {
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+      direction: ltr;
+    }
+
+    .signal-item-direction {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .signal-item-direction.buy {
+      background: rgba(0, 255, 136, 0.15);
+      color: #00ff88;
+      border: 1px solid rgba(0, 255, 136, 0.4);
+    }
+
+    .signal-item-direction.sell {
+      background: rgba(255, 68, 102, 0.15);
+      color: #ff4466;
+      border: 1px solid rgba(255, 68, 102, 0.4);
+    }
+
+    .signal-item-details {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+      color: rgba(170, 255, 255, 0.7);
+    }
+
+    .signal-item-details span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .signal-item-result {
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0, 242, 255, 0.1);
+    }
+
+    .signal-item-result.win {
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(0,255,136,0.4);
+    }
+
+    .signal-item-result.loss {
+      color: #ff4466;
+      text-shadow: 0 0 10px rgba(255,68,102,0.4);
+    }
+
+    .signal-item-result.pending {
+      color: #ffd700;
+      text-shadow: 0 0 10px rgba(255,215,0,0.4);
+    }
+
+    /* صفحة النتائج */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .stat-card {
+      background: linear-gradient(145deg, rgba(0,20,40,0.8), rgba(0,10,25,0.9));
+      border: 1px solid rgba(0, 242, 255, 0.25);
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-card svg {
+      width: 24px; height: 24px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .stat-value.green { color: #00ff88; text-shadow: 0 0 15px rgba(0,255,136,0.4); }
+    .stat-value.red { color: #ff4466; text-shadow: 0 0 15px rgba(255,68,102,0.4); }
+    .stat-value.gold { color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); }
+    .stat-value.cyan { color: #0cf; text-shadow: 0 0 15px rgba(0,204,255,0.4); }
+
+    .stat-label {
+      font-size: 12px;
+      color: rgba(170, 255, 255, 0.6);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .results-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .projector-beam {
       position: absolute;
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
       background: linear-gradient(0deg, rgba(0, 242, 255, 0.5) 0%, rgba(100, 200, 255, 0.2) 60%, transparent 100%);
       filter: blur(8px);
       z-index: 150;
@@ -820,9 +1162,7 @@
       border-radius: 50% 50% 0 0;
     }
 
-    .projector-beam.active {
-      opacity: 1;
-    }
+    .projector-beam.active { opacity: 1; }
 
     @media (max-width: 600px) {
       .robot-container { transform: translate(-50%, -50%) scale(0.5); }
@@ -830,18 +1170,20 @@
       .hologram-screen { width: 320px; }
       .holo-message { font-size: 38px; }
       .holo-sub-message { font-size: 20px; }
+      .signal-card-title { font-size: 24px; }
+      .signal-row-label { font-size: 13px; }
+      .signal-row-value { font-size: 14px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-value { font-size: 22px; }
+      .page-body { padding: 14px; }
+      .bottom-nav { gap: 16px; }
     }
   </style>
 </head>
 <body>
+
   <!-- شاشة البروجيكتور -->
   <div class="hologram-screen" id="hologramScreen">
-    <div class="holo-decoration">
-      <div class="holo-corner hc-tl"></div>
-      <div class="holo-corner hc-tr"></div>
-      <div class="holo-corner hc-bl"></div>
-      <div class="holo-corner hc-br"></div>
-    </div>
     <div class="holo-content" id="holoContent">
       <div class="typing-indicator" id="typingIndicator">
         <span class="typing-dot"></span>
@@ -854,8 +1196,35 @@
   <!-- شعاع البروجيكتور -->
   <div class="projector-beam" id="projectorBeam"></div>
 
+  <!-- صفحة الإشارات -->
+  <div class="page-overlay" id="signalsPage">
+    <div class="page-header">
+      <div class="page-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        الإشارات
+      </div>
+      <div class="page-close-btn" onclick="closePage('signalsPage')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="page-body" id="signalsList"></div>
+  </div>
+
+  <!-- صفحة النتائج -->
+  <div class="page-overlay" id="resultsPage">
+    <div class="page-header">
+      <div class="page-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+        النتائج
+      </div>
+      <div class="page-close-btn" onclick="closePage('resultsPage')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="page-body" id="resultsContent"></div>
+  </div>
+
   <div class="robot-container" id="robot">
-    <!-- علامة Zzz للنوم -->
     <div class="sleep-zzz" id="sleepZzz">
       <span class="z-letter">Z</span>
       <span class="z-letter">z</span>
@@ -871,7 +1240,6 @@
         <div class="ear-main"></div>
         <div class="horn-pill"></div>
       </div>
-      
       <div class="screen">
         <div class="bracket tl"></div>
         <div class="bracket tr"></div>
@@ -884,21 +1252,17 @@
 
     <div class="body-group">
       <div class="head-to-body-shadow"></div>
-
       <div class="arm waving" id="rightArm">
         <div class="shoulder-blue"></div>
         <div class="forearm-white"></div>
       </div>
-
       <div class="arm idle" id="leftArm">
         <div class="shoulder-blue"></div>
         <div class="forearm-white"></div>
       </div>
-
       <div class="vest-blue">
         <div class="reactor-core" id="reactorCore"></div>
       </div>
-
       <div class="belly-white"></div>
     </div>
 
@@ -909,7 +1273,7 @@
   <div class="tech-label" id="statusLabel">😴 الروبوت نائم ... 😴</div>
 
   <script>
-    // إنشاء الجسيمات (35 جسيم)
+    // إنشاء الجسيمات
     function createParticles() {
       const container = document.getElementById('particles');
       for (let i = 0; i < 35; i++) {
@@ -942,40 +1306,33 @@
     const projectorBeam = document.getElementById('projectorBeam');
     const groundShadow = document.getElementById('groundShadow');
     const holoContent = document.getElementById('holoContent');
-    
-    // وضعية البداية: نائم في المنتصف
+
     robot.style.left = '50%';
     robot.style.top = '50%';
     robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
-    
+
     head.classList.add('sleeping');
     leftEye.classList.add('closed');
     rightEye.classList.add('closed');
-    
     rightArm.classList.add('sleeping');
     leftArm.classList.add('sleeping');
     rightArm.style.transform = 'rotate(15deg) translateY(15px)';
     leftArm.style.transform = 'rotate(-20deg) translateY(15px)';
-    
     sleepZzz.classList.add('show');
     label.textContent = '😴 الروبوت نائم ... 4 ثواني 😴';
-    
-    // تحديث موقع شعاع البروجيكتور
+
     function updateBeamPosition() {
       if (!projectorBeam.classList.contains('active')) return;
       const reactorRect = reactorCore.getBoundingClientRect();
       const screenRect = hologramScreen.getBoundingClientRect();
-      
       const startX = reactorRect.left + reactorRect.width / 2;
       const startY = reactorRect.top + reactorRect.height / 2;
       const endX = screenRect.left + screenRect.width / 2;
       const endY = screenRect.top + screenRect.height / 2;
-      
       const deltaX = endX - startX;
       const deltaY = endY - startY;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-      
       projectorBeam.style.width = distance + 'px';
       projectorBeam.style.height = '10px';
       projectorBeam.style.left = startX + 'px';
@@ -983,61 +1340,346 @@
       projectorBeam.style.transform = `rotate(${angle}deg)`;
       projectorBeam.style.transformOrigin = '0 50%';
     }
-    
+
     let beamInterval;
     function startBeamUpdate() {
       if (beamInterval) clearInterval(beamInterval);
       beamInterval = setInterval(updateBeamPosition, 50);
     }
     startBeamUpdate();
-    
     window.addEventListener('resize', updateBeamPosition);
-    
-    // دوال التحكم في محتوى الشاشة
-    function setHoloContent(html) {
-      holoContent.innerHTML = html;
-    }
-    
+
+    function setHoloContent(html) { holoContent.innerHTML = html; }
+
     function showTyping() {
-      setHoloContent(`
-        <div class="typing-indicator">
-          <span class="typing-dot"></span>
-          <span class="typing-dot"></span>
-          <span class="typing-dot"></span>
-        </div>
-      `);
+      setHoloContent(`<div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`);
     }
-    
+
     function showWelcomeMessage() {
       setHoloContent(`<div class="holo-message">مرحباً بيك</div>`);
     }
-    
+
     function showReadyPrompt() {
       setHoloContent(`
         <div class="holo-sub-message">هل أنت جاهز للبدء؟</div>
         <button class="holo-button" id="readyButton">متابعة</button>
       `);
       document.getElementById('readyButton').addEventListener('click', () => {
-        label.textContent = '🚀 انطلاق! 🚀';
-        setHoloContent(`<div class="holo-message">🚀 انطلاق!</div>`);
-        setTimeout(() => {
-          projectorBeam.classList.remove('active');
-          hologramScreen.classList.remove('show');
-          reactorCore.classList.remove('projecting');
-          head.classList.remove('looking-up');
-          leftEye.classList.remove('looking-up');
-          rightEye.classList.remove('looking-up');
-          robot.style.left = '50%';
-          robot.style.top = '50%';
-          robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
-          groundShadow.style.opacity = '1';
-          robot.classList.add('float-active');
-          label.textContent = '✨ روبوت عائم في الوسط ✨';
-        }, 2000);
+        showKeyInput();
       });
     }
-    
-    // ===== بعد 4 ثواني: ينهض =====
+
+    // ===== خانة إدخال المفتاح =====
+    function showKeyInput() {
+      setHoloContent(`
+        <div class="key-input-container">
+          <label>أدخل مفتاح الدخول</label>
+          <input type="text" class="key-input-field" id="keyInputField" placeholder="••••••••" maxlength="20" />
+          <div class="key-error" id="keyError">المفتاح غير صحيح، حاول مرة أخرى</div>
+          <button class="holo-button" id="enterKeyBtn">دخول</button>
+        </div>
+      `);
+      const keyInput = document.getElementById('keyInputField');
+      const enterBtn = document.getElementById('enterKeyBtn');
+      const errorMsg = document.getElementById('keyError');
+
+      keyInput.focus();
+
+      function tryEnter() {
+        const val = keyInput.value.trim();
+        if (val.length > 0) {
+          // قبول أي مفتاح (أو يمكن التحقق من مفتاح محدد)
+          label.textContent = 'تم التحقق بنجاح';
+          activateFullscreenCard();
+        } else {
+          errorMsg.classList.add('show');
+          keyInput.style.borderColor = '#ff4466';
+          keyInput.style.boxShadow = '0 0 20px rgba(255,68,102,0.3)';
+          setTimeout(() => {
+            errorMsg.classList.remove('show');
+            keyInput.style.borderColor = 'rgba(0, 242, 255, 0.5)';
+            keyInput.style.boxShadow = 'none';
+          }, 2000);
+        }
+      }
+
+      enterBtn.addEventListener('click', tryEnter);
+      keyInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') tryEnter();
+      });
+    }
+
+    // ===== البطاقة بملء الشاشة =====
+    function activateFullscreenCard() {
+      hologramScreen.classList.add('fullscreen');
+
+      setTimeout(() => {
+        showSignalCard();
+      }, 800);
+    }
+
+    function showSignalCard() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const entryTime = `${hours}:${minutes}`;
+
+      setHoloContent(`
+        <div class="signal-card-container">
+          <div class="signal-card" id="signalCardMain">
+            <div class="signal-card-header">
+              <div class="signal-card-title">
+                <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="6,3 18,3 22,9 12,22 2,9"/>
+                  <line x1="2" y1="9" x2="22" y2="9"/>
+                  <line x1="12" y1="22" x2="6" y2="9"/>
+                  <line x1="12" y1="22" x2="18" y2="9"/>
+                  <line x1="6" y1="3" x2="10" y2="9"/>
+                  <line x1="18" y1="3" x2="14" y2="9"/>
+                </svg>
+                QX ZERO
+                <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="6,3 18,3 22,9 12,22 2,9"/>
+                  <line x1="2" y1="9" x2="22" y2="9"/>
+                  <line x1="12" y1="22" x2="6" y2="9"/>
+                  <line x1="12" y1="22" x2="18" y2="9"/>
+                  <line x1="6" y1="3" x2="10" y2="9"/>
+                  <line x1="18" y1="3" x2="14" y2="9"/>
+                </svg>
+              </div>
+            </div>
+            <div class="signal-card-body">
+              <div class="signal-row">
+                <div class="signal-row-label">
+                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 6v6l4 2"/>
+                  </svg>
+                  زوج الأصول
+                </div>
+                <div class="signal-row-value">USDTRY-OTC</div>
+              </div>
+              <div class="signal-row">
+                <div class="signal-row-label">
+                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                  الإطار الزمني
+                </div>
+                <div class="signal-row-value">1 MINUTE</div>
+              </div>
+              <div class="signal-row">
+                <div class="signal-row-label">
+                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  وقت الدخول
+                </div>
+                <div class="signal-row-value">${entryTime}</div>
+              </div>
+              <div class="signal-row">
+                <div class="signal-row-label">
+                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                    <polyline points="17 6 23 6 23 12"/>
+                  </svg>
+                  اتجاه التداول
+                </div>
+                <div class="signal-row-value buy">BUY</div>
+              </div>
+            </div>
+            <div class="signal-card-footer">
+              <div class="signal-card-footer-text">
+                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                  <path d="M4 22h16"/>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+                ROYAL GOLD EDITION
+                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                  <path d="M4 22h16"/>
+                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20 7 22"/>
+                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20 17 22"/>
+                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav show" id="bottomNav">
+          <div class="nav-btn" id="navSignals">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            <span>الإشارات</span>
+          </div>
+          <div class="nav-btn" id="navResults">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20V10"/>
+              <path d="M18 20V4"/>
+              <path d="M6 20v-4"/>
+            </svg>
+            <span>النتائج</span>
+          </div>
+        </div>
+      `);
+
+      setTimeout(() => {
+        const card = document.getElementById('signalCardMain');
+        if (card) card.classList.add('show');
+      }, 200);
+
+      // أحداث الأزرار السفلية
+      document.getElementById('navSignals').addEventListener('click', openSignalsPage);
+      document.getElementById('navResults').addEventListener('click', openResultsPage);
+    }
+
+    // ===== صفحة الإشارات =====
+    function openSignalsPage() {
+      const page = document.getElementById('signalsPage');
+      const list = document.getElementById('signalsList');
+
+      const signalsData = [
+        { pair: 'USDTRY-OTC', time: '14:35', tf: '1 MIN', dir: 'buy', time2: 'اليوم' },
+        { pair: 'EURUSD-OTC', time: '14:30', tf: '1 MIN', dir: 'sell', time2: 'اليوم' },
+        { pair: 'GBPUSD-OTC', time: '14:25', tf: '1 MIN', dir: 'buy', time2: 'اليوم' },
+        { pair: 'USDJPY-OTC', time: '14:20', tf: '1 MIN', dir: 'sell', time2: 'اليوم' },
+        { pair: 'AUDUSD-OTC', time: '14:15', tf: '1 MIN', dir: 'buy', time2: 'اليوم' },
+      ];
+
+      let html = '';
+      signalsData.forEach((s, i) => {
+        const dirLabel = s.dir === 'buy' ? 'شراء BUY' : 'بيع SELL';
+        html += `
+          <div class="signal-item" data-index="${i}">
+            <div class="signal-item-header">
+              <span class="signal-item-pair">${s.pair}</span>
+              <span class="signal-item-direction ${s.dir}">${dirLabel}</span>
+            </div>
+            <div class="signal-item-details">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${s.time}
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                ${s.tf}
+              </span>
+              <span>${s.time2}</span>
+            </div>
+          </div>
+        `;
+      });
+
+      list.innerHTML = html;
+      page.classList.add('show');
+
+      // أنيميشن تظهر تدريجي
+      setTimeout(() => {
+        list.querySelectorAll('.signal-item').forEach((item, i) => {
+          setTimeout(() => item.classList.add('show'), i * 120);
+        });
+      }, 300);
+    }
+
+    // ===== صفحة النتائج =====
+    function openResultsPage() {
+      const page = document.getElementById('resultsPage');
+      const content = document.getElementById('resultsContent');
+
+      content.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <div class="stat-value green">87%</div>
+            <div class="stat-label">نسبة الربح</div>
+          </div>
+          <div class="stat-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <div class="stat-value cyan">24</div>
+            <div class="stat-label">إجمالي الصفقات</div>
+          </div>
+          <div class="stat-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
+            <div class="stat-value green">21</div>
+            <div class="stat-label">صفقات رابحة</div>
+          </div>
+          <div class="stat-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <div class="stat-value red">3</div>
+            <div class="stat-label">صفقات خاسرة</div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:8px; margin-bottom:4px;">
+          <span style="color:rgba(170,255,255,0.7); font-size:14px; font-weight:700; letter-spacing:1px;">سجل الصفقات</span>
+        </div>
+
+        <div class="results-list" id="resultsList"></div>
+      `;
+
+      page.classList.add('show');
+
+      const resultsData = [
+        { pair: 'USDTRY-OTC', dir: 'buy', time: '14:35', result: 'win', profit: '+$45' },
+        { pair: 'EURUSD-OTC', dir: 'sell', time: '14:20', result: 'win', profit: '+$38' },
+        { pair: 'GBPUSD-OTC', dir: 'buy', time: '14:05', result: 'win', profit: '+$52' },
+        { pair: 'USDJPY-OTC', dir: 'sell', time: '13:50', result: 'loss', profit: '-$20' },
+        { pair: 'AUDUSD-OTC', dir: 'buy', time: '13:35', result: 'win', profit: '+$41' },
+        { pair: 'NZDUSD-OTC', dir: 'sell', time: '13:20', result: 'win', profit: '+$35' },
+        { pair: 'USDCAD-OTC', dir: 'buy', time: '13:05', result: 'loss', profit: '-$18' },
+        { pair: 'EURGBP-OTC', dir: 'sell', time: '12:50', result: 'win', profit: '+$47' },
+      ];
+
+      const list = document.getElementById('resultsList');
+      let rhtml = '';
+      resultsData.forEach((r, i) => {
+        const dirLabel = r.dir === 'buy' ? 'BUY' : 'SELL';
+        const resultLabel = r.result === 'win' ? 'ربح WIN' : 'خسارة LOSS';
+        rhtml += `
+          <div class="signal-item" data-index="${i}">
+            <div class="signal-item-header">
+              <span class="signal-item-pair">${r.pair}</span>
+              <span class="signal-item-direction ${r.dir}">${dirLabel}</span>
+            </div>
+            <div class="signal-item-details">
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${r.time}
+              </span>
+              <span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                1 MIN
+              </span>
+            </div>
+            <div class="signal-item-result ${r.result}">
+              ${resultLabel} &nbsp; <span style="font-weight:900; font-size:16px;">${r.profit}</span>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = rhtml;
+
+      setTimeout(() => {
+        list.querySelectorAll('.signal-item').forEach((item, i) => {
+          setTimeout(() => item.classList.add('show'), i * 100);
+        });
+      }, 400);
+    }
+
+    function closePage(pageId) {
+      document.getElementById(pageId).classList.remove('show');
+    }
+
+    // ===== التسلسل الزمني =====
     setTimeout(() => {
       label.textContent = '🌟 يستيقظ... ينهض 🌟';
       sleepZzz.classList.remove('show');
@@ -1048,10 +1690,9 @@
       leftArm.classList.remove('sleeping');
       rightArm.style.transform = 'rotate(15deg)';
       leftArm.style.transform = 'rotate(-20deg)';
-      
+
       setTimeout(() => {
         label.textContent = '👋 مرحباً! يلوح بيده 👋';
-        
         let waveCount = 0;
         const waveInterval = setInterval(() => {
           if (waveCount < 6) {
@@ -1062,17 +1703,16 @@
             clearInterval(waveInterval);
             rightArm.style.transform = 'rotate(15deg)';
             leftArm.style.transform = 'rotate(-20deg)';
-            
+
             label.textContent = '🔮 تجهيز البروجيكتور ... 🔮';
-            
+
             setTimeout(() => {
               label.textContent = '📡 يبتعد للخلف وينزل للأسفل ... 📡';
-              // *** التعديل: الروبوت ينزل للأسفل تحت البطاقة ***
               robot.style.left = '42%';
-              robot.style.top = '78%'; // نزل الروبوت للأسفل بوضوح تحت البطاقة
+              robot.style.top = '78%';
               robot.style.transform = 'translate(-50%, -50%) scale(0.6)';
               groundShadow.style.opacity = '0.3';
-              
+
               setTimeout(() => {
                 label.textContent = '💫 تشغيل البروجيكتور ... 💫';
                 reactorCore.classList.add('projecting');
@@ -1081,35 +1721,32 @@
                 head.classList.add('looking-up');
                 leftEye.classList.add('looking-up');
                 rightEye.classList.add('looking-up');
-                
+
                 hologramScreen.classList.add('show');
                 showTyping();
-                
-                // بعد 1.5 ثانية - إظهار مرحباً بيك
+
                 setTimeout(() => {
                   showWelcomeMessage();
-                  
-                  // بعد 2.5 ثانية - العودة للـ typing ثم رسالة هل أنت جاهز
+
                   setTimeout(() => {
                     showTyping();
-                    
+
                     setTimeout(() => {
                       showReadyPrompt();
                     }, 1000);
-                    
+
                   }, 2500);
-                  
+
                 }, 1500);
-                
+
               }, 800);
             }, 500);
           }
         }, 170);
       }, 600);
-      
+
     }, 4000);
-    
-    // تفاعل العيون
+
     document.querySelectorAll('.eye').forEach(eye => {
       eye.addEventListener('click', function() {
         if (!this.classList.contains('closed')) {
@@ -1122,3 +1759,4 @@
   </script>
 </body>
 </html>
+
