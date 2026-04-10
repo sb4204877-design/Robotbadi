@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>روبوت ثلاثي الأبعاد · نائم ثم ينهض · بروجيكتور كامل</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 30% 40%, #0a0f1e 0%, #03060c 100%);
+      overflow-x: hidden;
+      overflow-y: hidden;
+      font-family: 'Cairo', sans-serif;
+      cursor: default;
+      position: relative;
+    }
+
+    .robot-container {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+      will-change: left, top, transform;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.65);
+      transition: left 1.2s cubic-bezier(0.34, 1.2, 0.64, 1), top 1.2s cubic-bezier(0.34, 1.2, 0.64, 1), transform 1.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+      z-index: 100;
+    }
+
+    /* ========== الرأس ========== */
+    .head {
+      width: 180px;
+      height: 145px;
+      background: radial-gradient(ellipse at 30% 25%, #f0f8ff 0%, #c5d5e8 25%, #9eb8d4 50%, #7a9bbf 75%, #5a7fa8 100%);
+      border-radius: 60px 60px 55px 55px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 30px 45px rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4), inset -8px -12px 18px rgba(0,0,0,0.25), inset 12px 15px 25px rgba(255,255,255,0.8), inset -3px -3px 8px rgba(0,0,0,0.15), 0 0 0 1.5px rgba(255,255,255,0.4), 0 0 0 3px rgba(100,150,200,0.15);
+      z-index: 20;
+      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1);
+      transform-origin: center 80%;
+    }
+
+    /* وضعية النوم: الرأس منحني للأمام */
+    .head.sleeping {
+      transform: rotate(25deg);
+    }
+
+    /* وضعية النظر للأعلى (باتجاه الشاشة) */
+    .head.looking-up {
+      transform: rotate(-12deg);
+    }
+
+    .head::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 25px;
+      width: 85px;
+      height: 45px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 50%, transparent 80%);
+      border-radius: 50%;
+      filter: blur(8px);
+      transform: rotate(-15deg);
+      opacity: 0.9;
+    }
+
+    .head::after {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      right: 18px;
+      width: 50px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, rgba(200,220,255,0.2) 60%, transparent 90%);
+      border-radius: 50%;
+      filter: blur(6px);
+      transform: rotate(20deg);
+    }
+
+    /* ========== الأذنان - في منتصف الرأس وأكبر قليلاً ========== */
+    .ear-module {
+      position: absolute;
+      top: 55px;
+      width: 24px;
+      height: 45px;
+      z-index: 19;
+    }
+
+    .ear-module.left { left: -22px; }
+    .ear-module.right { right: -22px; }
+
+    .ear-main {
+      width: 22px;
+      height: 36px;
+      background: radial-gradient(ellipse at 35% 30%, 
+        #8ab8e8 0%, 
+        #4a8ec5 40%, 
+        #2a6bb0 70%,
+        #1a4a8a 100%);
+      border-radius: 10px 10px 8px 8px;
+      box-shadow: 
+        0 5px 10px rgba(0, 0, 0, 0.5),
+        0 2px 5px rgba(0, 0, 0, 0.3),
+        inset -1px -2px 5px rgba(0, 0, 0, 0.35),
+        inset 3px 3px 8px rgba(255, 255, 255, 0.6),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+      border-left: 1px solid rgba(255, 255, 255, 0.5);
+      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      position: relative;
+      margin: 0;
+    }
+
+    .horn-pill {
+      width: 12px;
+      height: 26px;
+      background: linear-gradient(145deg, 
+        #6aacf0 0%, 
+        #3a7ec5 35%, 
+        #1a5aa0 70%,
+        #0e3d7a 100%);
+      border-radius: 6px 6px 4px 4px;
+      position: absolute;
+      top: -20px;
+      box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset -1px -1px 3px rgba(0, 0, 0, 0.3),
+        inset 1px 1px 5px rgba(255, 255, 255, 0.5);
+      border-left: 1px solid rgba(255, 255, 255, 0.4);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ear-module.left .horn-pill {
+      left: 2px;
+      transform: rotate(-25deg);
+      transform-origin: bottom right;
+    }
+
+    .ear-module.right .horn-pill {
+      right: 2px;
+      transform: rotate(25deg);
+      transform-origin: bottom left;
+    }
+
+    .ear-main::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 3px;
+      width: 7px;
+      height: 10px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 80%);
+      border-radius: 50%;
+      filter: blur(1.5px);
+    }
+
+    /* الشاشة */
+    .screen {
+      width: 155px;
+      height: 108px;
+      background: linear-gradient(145deg, #0e1218 0%, #080a0e 40%, #05070a 70%, #020305 100%);
+      border-radius: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      border: 1.5px solid #2a6f9f;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.95), inset 0 5px 15px rgba(0,0,0,0.7), inset 0 -5px 10px rgba(0,242,255,0.1), 0 0 20px rgba(0,242,255,0.3), 0 10px 25px rgba(0,0,0,0.5), 0 0 0 2px rgba(50,100,150,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(45deg, rgba(0,242,255,0.04) 0px, rgba(0,242,255,0.04) 2px, transparent 2px, transparent 8px);
+      animation: scan 8s linear infinite;
+      border-radius: 38px;
+    }
+
+    .screen::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      width: 60px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(5px);
+      transform: rotate(-20deg);
+    }
+
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 50px 50px; }
+    }
+
+    .bracket {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #0cf;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px #0cf) drop-shadow(0 0 12px rgba(0,204,255,0.5));
+      z-index: 2;
+    }
+
+    .tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
+    .tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; }
+    .bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
+    .br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
+
+    /* العيون */
+    .eye {
+      width: 44px;
+      height: 32px;
+      position: relative;
+      transform: translateY(10px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    /* العين المفتوحة */
+    .eye::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 5px solid #0cf;
+      border-color: #0cf transparent transparent transparent;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 15px #0cf);
+      animation: blink 4s infinite;
+      transform: scaleX(0.85);
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    /* العين المغلقة (للنوم) */
+    .eye.closed::before {
+      border: 5px solid #0cf;
+      border-color: transparent transparent #0cf transparent;
+      border-radius: 50%;
+      transform: scaleX(0.85) scaleY(0.15);
+      filter: drop-shadow(0 0 8px #0cf);
+      animation: none;
+    }
+
+    /* العين تنظر للأعلى */
+    .eye.looking-up::before {
+      transform: scaleX(0.85) translateY(-4px);
+      border-color: #0cf transparent transparent transparent;
+    }
+
+    .eye::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #aaffff 0%, #0cf 50%, #0099cc 100%);
+      border-radius: 50%;
+      filter: blur(3px);
+      animation: pulse 1.5s infinite;
+      box-shadow: 0 0 15px #0cf;
+      transition: opacity 0.3s ease, bottom 0.3s ease;
+    }
+
+    .eye.looking-up::after {
+      bottom: 0px;
+    }
+
+    .eye.closed::after {
+      opacity: 0;
+    }
+
+    @keyframes blink {
+      0%, 94%, 100% { opacity: 1; transform: scaleY(1) scaleX(0.85); }
+      97% { opacity: 0.3; transform: scaleY(0.05) scaleX(0.85); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.4); }
+    }
+
+    /* ========== علامة Zzz للنوم ========== */
+    .sleep-zzz {
+      position: absolute;
+      top: -40px;
+      right: -30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 25;
+    }
+
+    .sleep-zzz.show {
+      opacity: 1;
+    }
+
+    .z-letter {
+      color: #0cf;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      text-shadow: 0 0 20px #0cf, 0 0 40px #0cf;
+      filter: drop-shadow(0 0 5px rgba(0,204,255,0.8));
+      animation: floatZ 2s ease-in-out infinite;
+    }
+
+    .z-letter:nth-child(1) { font-size: 18px; opacity: 0.6; animation-delay: 0s; }
+    .z-letter:nth-child(2) { font-size: 24px; opacity: 0.8; animation-delay: 0.3s; }
+    .z-letter:nth-child(3) { font-size: 30px; opacity: 1; animation-delay: 0.6s; }
+
+    @keyframes floatZ {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    /* ========== الجسم ========== */
+    .body-group {
+      margin-top: -28px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .head-to-body-shadow {
+      position: absolute;
+      top: 0;
+      width: 110px;
+      height: 25px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 70%, transparent 100%);
+      filter: blur(12px);
+      z-index: 15;
+      border-radius: 50%;
+    }
+
+    .vest-blue {
+      width: 145px;
+      height: 95px;
+      background: radial-gradient(ellipse at 25% 25%, #8ab8ff 0%, #5a9ad5 30%, #2a6fcf 55%, #1a4a8a 80%, #0e2d5a 100%);
+      border-radius: 55px 55px 40px 40px;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 18px;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3), inset -6px -8px 15px rgba(0,0,0,0.35), inset 10px 12px 20px rgba(255,255,255,0.5), 0 0 0 2px rgba(100,150,220,0.2);
+      position: relative;
+    }
+
+    .vest-blue::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      width: 50px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+      filter: blur(6px);
+      transform: rotate(-15deg);
+    }
+
+    .reactor-core {
+      width: 45px;
+      height: 45px;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d4f4ff 30%, #8ae4ff 50%, #0cf 70%, #0099cc 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 30px #0cf, 0 0 60px #0cf, inset 0 0 15px rgba(255,255,255,0.9), inset -2px -2px 8px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.4);
+      border: 3px solid #8cc9ff;
+      animation: reactorPulse 2s ease-in-out infinite;
+      position: relative;
+      transition: box-shadow 0.5s ease;
+    }
+
+    .reactor-core.projecting {
+      box-shadow: 0 0 60px #0cf, 0 0 120px #0cf, 0 0 180px #5a9eff, inset 0 0 20px #fff;
+      animation: reactorPulseProjecting 1.5s ease-in-out infinite;
+    }
+
+    .reactor-core::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #ffffff 0%, #aaffff 60%, transparent 100%);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(5px);
+      box-shadow: 0 0 20px #fff;
+    }
+
+    .reactor-core::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: 10px;
+      width: 15px;
+      height: 8px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.7) 0%, transparent 80%);
+      border-radius: 50%;
+      filter: blur(3px);
+      transform: rotate(-20deg);
+    }
+
+    @keyframes reactorPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 25px #0cf, 0 0 50px #0cf; }
+      50% { transform: scale(1.08); box-shadow: 0 0 45px #0cf, 0 0 80px #0cf; }
+    }
+
+    @keyframes reactorPulseProjecting {
+      0%, 100% { transform: scale(1.05); box-shadow: 0 0 50px #0cf, 0 0 100px #0cf, 0 0 150px #5a9eff; }
+      50% { transform: scale(1.15); box-shadow: 0 0 80px #0cf, 0 0 150px #5a9eff, 0 0 200px #aaffff; }
+    }
+
+    .belly-white {
+      width: 125px;
+      height: 125px;
+      background: radial-gradient(ellipse at 30% 30%, #ffffff 0%, #e8f0fa 30%, #d0deef 55%, #b8c8e0 75%, #a0b4cc 100%);
+      border-radius: 50% 50% 55% 55% / 45% 45% 55% 55%;
+      margin-top: -65px;
+      z-index: 5;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.45), 0 15px 25px rgba(0,0,0,0.3), inset -8px -10px 20px rgba(0,0,0,0.15), inset 12px 14px 25px rgba(255,255,255,0.8), 0 0 0 2px rgba(255,255,255,0.3);
+      position: relative;
+    }
+
+    .belly-white::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      width: 50px;
+      height: 35px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 90%);
+      border-radius: 50%;
+      filter: blur(8px);
+      transform: rotate(-15deg);
+    }
+
+    /* ========== الأذرع ========== */
+    .arm {
+      position: absolute;
+      width: 55px;
+      height: 105px;
+      z-index: 12;
+      transform-origin: top center;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+      transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .arm.waving { left: -44px; top: 25px; }
+    .arm.idle { right: -44px; top: 25px; }
+
+    .arm.sleeping {
+      transition: transform 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+
+    .arm.waving.sleeping { transform: rotate(15deg) translateY(15px); }
+    .arm.idle.sleeping { transform: rotate(-20deg) translateY(15px); }
+
+    .shoulder-blue {
+      width: 100%;
+      height: 60%;
+      background: radial-gradient(ellipse at 30% 25%, #7ab0f0 0%, #4a8ad5 40%, #2a6fcf 70%, #1a4a8a 100%);
+      border-radius: 55% 55% 45% 45%;
+      box-shadow: 0 14px 22px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.3), inset -4px -5px 10px rgba(0,0,0,0.3), inset 6px 7px 15px rgba(255,255,255,0.6);
+      position: relative;
+    }
+
+    .shoulder-blue::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 12px;
+      background: radial-gradient(ellipse, #3a7bc0, #1a4a8a);
+      border-radius: 50%;
+      filter: blur(4px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    .shoulder-blue::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      width: 25px;
+      height: 15px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, transparent 80%);
+      border-radius: 50%;
+      filter: blur(4px);
+      transform: rotate(-20deg);
+    }
+
+    .forearm-white {
+      width: 75%;
+      height: 45%;
+      background: radial-gradient(ellipse at 35% 30%, #f8fcff 0%, #e0ecf8 40%, #c8d8f0 70%, #b0c4e0 100%);
+      border-radius: 35% 35% 50% 50%;
+      margin: -8px auto 0;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.35), 0 6px 10px rgba(0,0,0,0.25), inset -3px -4px 10px rgba(0,0,0,0.15), inset 5px 5px 12px rgba(255,255,255,0.8);
+      position: relative;
+      transform: perspective(200px) rotateX(5deg);
+    }
+
+    .forearm-white::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 10px;
+      background: radial-gradient(ellipse, #d8e8f8, #b0c4e0);
+      border-radius: 50%;
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.1);
+    }
+
+    .forearm-white::after {
+      content: '';
+      display: block;
+      width: 80%;
+      height: 16px;
+      background: linear-gradient(145deg, #c8daf0, #a0b8d0);
+      border-radius: 20px;
+      margin: 12px auto 0;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2), inset 0 -2px 4px rgba(255,255,255,0.5), 0 3px 8px rgba(0,0,0,0.2);
+      transform: perspective(100px) rotateX(3deg);
+    }
+
+    .arm.idle .forearm-white {
+      transform: perspective(200px) rotateX(5deg) rotateY(-3deg);
+    }
+
+    .arm.waving .forearm-white {
+      transform: perspective(200px) rotateX(5deg) rotateY(3deg);
+    }
+
+    .ground-shadow {
+      width: 180px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(18px);
+      margin-top: 35px;
+      transition: opacity 0.5s ease;
+    }
+
+    .tech-particles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      top: 0;
+      left: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #0cf;
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleFloat 4s infinite;
+      box-shadow: 0 0 8px #0cf;
+    }
+
+    @keyframes particleFloat {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+    }
+
+    .tech-label {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(0, 242, 255, 0.9);
+      font-family: 'Cairo', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      background: linear-gradient(145deg, rgba(0,20,40,0.7), rgba(0,10,20,0.8));
+      padding: 6px 18px;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,242,255,0.5);
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 300;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+      text-shadow: 0 0 10px #0cf;
+    }
+
+    @keyframes floatAfter {
+      0%, 100% { transform: translate(-50%, -50%) scale(0.65) translateY(0px); }
+      50% { transform: translate(-50%, -50%) scale(0.65) translateY(-20px); }
+    }
+
+    .robot-container.float-active {
+      animation: floatAfter 3s ease-in-out infinite;
+    }
+
+    /* ========== شاشة البروجيكتور ========== */
+    .hologram-screen {
+      position: absolute;
+      top: 16%;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      width: 380px;
+      min-height: 220px;
+      background: rgba(0, 242, 255, 0.04);
+      backdrop-filter: blur(12px);
+      border-radius: 30px;
+      border: 1.5px solid rgba(0, 242, 255, 0.5);
+      box-shadow: 
+        0 0 60px rgba(0, 242, 255, 0.3),
+        0 0 120px rgba(0, 150, 255, 0.15),
+        inset 0 0 40px rgba(0, 242, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.6s ease;
+      pointer-events: none;
+      padding: 24px 20px;
+    }
+
+    .hologram-screen.show {
+      transform: translateX(-50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hologram-screen::before {
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
+      background: linear-gradient(135deg, #0cf, #5a9eff, #aaffff, #0cf);
+      border-radius: 32px;
+      opacity: 0.2;
+      z-index: -1;
+      filter: blur(10px);
+    }
+
+    .hologram-screen::after {
+      content: '';
+      position: absolute;
+      top: 10px; left: 20px;
+      width: 80px; height: 40px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.3) 0%, transparent 80%);
+      border-radius: 50%;
+      filter: blur(8px);
+      transform: rotate(-20deg);
+    }
+
+    .holo-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .holo-message {
+      font-size: 48px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 30px #0cf, 0 0 60px #0cf;
+      letter-spacing: 5px;
+      background: linear-gradient(135deg, #ffffff, #d4f4ff, #aaffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: glowText 3s infinite alternate;
+      margin: 0;
+      line-height: 1.3;
+      text-align: center;
+    }
+
+    .holo-sub-message {
+      font-size: 24px;
+      font-weight: 700;
+      color: rgba(170, 255, 255, 0.95);
+      text-shadow: 0 0 20px #0cf;
+      letter-spacing: 2px;
+      text-align: center;
+      margin: 5px 0;
+    }
+
+    @keyframes glowText {
+      0% { text-shadow: 0 0 30px #0cf, 0 0 60px #0cf; }
+      100% { text-shadow: 0 0 50px #5a9eff, 0 0 90px #aaffff; }
+    }
+
+    /* ثلاث نقاط متحركة */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 0;
+    }
+
+    .typing-dot {
+      width: 14px;
+      height: 14px;
+      background: #0cf;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #0cf, 0 0 40px #0cf;
+      animation: typingBounce 1.4s infinite ease-in-out;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: 0s; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-15px); opacity: 1; }
+    }
+
+    .holo-button {
+      background: rgba(0, 242, 255, 0.12);
+      border: 1.5px solid rgba(0, 242, 255, 0.7);
+      border-radius: 40px;
+      padding: 12px 36px;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.3), inset 0 0 12px rgba(0, 242, 255, 0.2);
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      text-shadow: 0 0 12px #0cf;
+    }
+
+    .holo-button:hover {
+      background: rgba(0, 242, 255, 0.25);
+      box-shadow: 0 0 50px #0cf, inset 0 0 15px #fff;
+      transform: scale(1.05);
+      border-color: #aaffff;
+    }
+
+    .holo-decoration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .holo-corner {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(0, 242, 255, 0.7);
+      filter: drop-shadow(0 0 8px #0cf);
+    }
+
+    .hc-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+    .hc-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+    .hc-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+    .hc-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+    /* ========== شعاع البروجيكتور ========== */
+    .projector-beam {
+      position: absolute;
+      width: 0;
+      height: 0;
+      background: linear-gradient(0deg, rgba(0, 242, 255, 0.5) 0%, rgba(100, 200, 255, 0.2) 60%, transparent 100%);
+      filter: blur(8px);
+      z-index: 150;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      mix-blend-mode: screen;
+      border-radius: 50% 50% 0 0;
+    }
+
+    .projector-beam.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 600px) {
+      .robot-container { transform: translate(-50%, -50%) scale(0.5); }
+      .tech-label { font-size: 9px; bottom: 10px; }
+      .hologram-screen { width: 320px; }
+      .holo-message { font-size: 38px; }
+      .holo-sub-message { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- شاشة البروجيكتور -->
+  <div class="hologram-screen" id="hologramScreen">
+    <div class="holo-decoration">
+      <div class="holo-corner hc-tl"></div>
+      <div class="holo-corner hc-tr"></div>
+      <div class="holo-corner hc-bl"></div>
+      <div class="holo-corner hc-br"></div>
+    </div>
+    <div class="holo-content" id="holoContent">
+      <div class="typing-indicator" id="typingIndicator">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- شعاع البروجيكتور -->
+  <div class="projector-beam" id="projectorBeam"></div>
+
+  <div class="robot-container" id="robot">
+    <!-- علامة Zzz للنوم -->
+    <div class="sleep-zzz" id="sleepZzz">
+      <span class="z-letter">Z</span>
+      <span class="z-letter">z</span>
+      <span class="z-letter">z</span>
+    </div>
+
+    <div class="head" id="head">
+      <div class="ear-module left">
+        <div class="ear-main"></div>
+        <div class="horn-pill"></div>
+      </div>
+      <div class="ear-module right">
+        <div class="ear-main"></div>
+        <div class="horn-pill"></div>
+      </div>
+      
+      <div class="screen">
+        <div class="bracket tl"></div>
+        <div class="bracket tr"></div>
+        <div class="bracket bl"></div>
+        <div class="bracket br"></div>
+        <div class="eye" id="leftEye"></div>
+        <div class="eye" id="rightEye"></div>
+      </div>
+    </div>
+
+    <div class="body-group">
+      <div class="head-to-body-shadow"></div>
+
+      <div class="arm waving" id="rightArm">
+        <div class="shoulder-blue"></div>
+        <div class="forearm-white"></div>
+      </div>
+
+      <div class="arm idle" id="leftArm">
+        <div class="shoulder-blue"></div>
+        <div class="forearm-white"></div>
+      </div>
+
+      <div class="vest-blue">
+        <div class="reactor-core" id="reactorCore"></div>
+      </div>
+
+      <div class="belly-white"></div>
+    </div>
+
+    <div class="ground-shadow" id="groundShadow"></div>
+  </div>
+
+  <div class="tech-particles" id="particles"></div>
+  <div class="tech-label" id="statusLabel">😴 الروبوت نائم ... 😴</div>
+
+  <script>
+    // إنشاء الجسيمات (35 جسيم)
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 35; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 3 + 1.5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        particle.style.background = `radial-gradient(circle, #0cf, ${Math.random() > 0.5 ? '#5a9eff' : '#aaffff'})`;
+        particle.style.boxShadow = `0 0 ${size * 3}px #0cf`;
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    const robot = document.getElementById('robot');
+    const head = document.getElementById('head');
+    const rightArm = document.getElementById('rightArm');
+    const leftArm = document.getElementById('leftArm');
+    const leftEye = document.getElementById('leftEye');
+    const rightEye = document.getElementById('rightEye');
+    const label = document.getElementById('statusLabel');
+    const sleepZzz = document.getElementById('sleepZzz');
+    const reactorCore = document.getElementById('reactorCore');
+    const hologramScreen = document.getElementById('hologramScreen');
+    const projectorBeam = document.getElementById('projectorBeam');
+    const groundShadow = document.getElementById('groundShadow');
+    const holoContent = document.getElementById('holoContent');
+    
+    // وضعية البداية: نائم في المنتصف
+    robot.style.left = '50%';
+    robot.style.top = '50%';
+    robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
+    
+    head.classList.add('sleeping');
+    leftEye.classList.add('closed');
+    rightEye.classList.add('closed');
+    
+    rightArm.classList.add('sleeping');
+    leftArm.classList.add('sleeping');
+    rightArm.style.transform = 'rotate(15deg) translateY(15px)';
+    leftArm.style.transform = 'rotate(-20deg) translateY(15px)';
+    
+    sleepZzz.classList.add('show');
+    label.textContent = '😴 الروبوت نائم ... 4 ثواني 😴';
+    
+    // تحديث موقع شعاع البروجيكتور
+    function updateBeamPosition() {
+      if (!projectorBeam.classList.contains('active')) return;
+      const reactorRect = reactorCore.getBoundingClientRect();
+      const screenRect = hologramScreen.getBoundingClientRect();
+      
+      const startX = reactorRect.left + reactorRect.width / 2;
+      const startY = reactorRect.top + reactorRect.height / 2;
+      const endX = screenRect.left + screenRect.width / 2;
+      const endY = screenRect.top + screenRect.height / 2;
+      
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+      
+      projectorBeam.style.width = distance + 'px';
+      projectorBeam.style.height = '10px';
+      projectorBeam.style.left = startX + 'px';
+      projectorBeam.style.top = startY - 5 + 'px';
+      projectorBeam.style.transform = `rotate(${angle}deg)`;
+      projectorBeam.style.transformOrigin = '0 50%';
+    }
+    
+    let beamInterval;
+    function startBeamUpdate() {
+      if (beamInterval) clearInterval(beamInterval);
+      beamInterval = setInterval(updateBeamPosition, 50);
+    }
+    startBeamUpdate();
+    
+    window.addEventListener('resize', updateBeamPosition);
+    
+    // دوال التحكم في محتوى الشاشة
+    function setHoloContent(html) {
+      holoContent.innerHTML = html;
+    }
+    
+    function showTyping() {
+      setHoloContent(`
+        <div class="typing-indicator">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+        </div>
+      `);
+    }
+    
+    function showWelcomeMessage() {
+      setHoloContent(`<div class="holo-message">مرحباً بيك</div>`);
+    }
+    
+    function showReadyPrompt() {
+      setHoloContent(`
+        <div class="holo-sub-message">هل أنت جاهز للبدء؟</div>
+        <button class="holo-button" id="readyButton">متابعة</button>
+      `);
+      document.getElementById('readyButton').addEventListener('click', () => {
+        label.textContent = '🚀 انطلاق! 🚀';
+        setHoloContent(`<div class="holo-message">🚀 انطلاق!</div>`);
+        setTimeout(() => {
+          projectorBeam.classList.remove('active');
+          hologramScreen.classList.remove('show');
+          reactorCore.classList.remove('projecting');
+          head.classList.remove('looking-up');
+          leftEye.classList.remove('looking-up');
+          rightEye.classList.remove('looking-up');
+          robot.style.left = '50%';
+          robot.style.top = '50%';
+          robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
+          groundShadow.style.opacity = '1';
+          robot.classList.add('float-active');
+          label.textContent = '✨ روبوت عائم في الوسط ✨';
+        }, 2000);
+      });
+    }
+    
+    // ===== بعد 4 ثواني: ينهض =====
+    setTimeout(() => {
+      label.textContent = '🌟 يستيقظ... ينهض 🌟';
+      sleepZzz.classList.remove('show');
+      head.classList.remove('sleeping');
+      leftEye.classList.remove('closed');
+      rightEye.classList.remove('closed');
+      rightArm.classList.remove('sleeping');
+      leftArm.classList.remove('sleeping');
+      rightArm.style.transform = 'rotate(15deg)';
+      leftArm.style.transform = 'rotate(-20deg)';
+      
+      setTimeout(() => {
+        label.textContent = '👋 مرحباً! يلوح بيده 👋';
+        
+        let waveCount = 0;
+        const waveInterval = setInterval(() => {
+          if (waveCount < 6) {
+            rightArm.style.transform = waveCount % 2 === 0 ? 'rotate(110deg)' : 'rotate(15deg)';
+            leftArm.style.transform = waveCount % 2 === 0 ? 'rotate(-100deg)' : 'rotate(-20deg)';
+            waveCount++;
+          } else {
+            clearInterval(waveInterval);
+            rightArm.style.transform = 'rotate(15deg)';
+            leftArm.style.transform = 'rotate(-20deg)';
+            
+            label.textContent = '🔮 تجهيز البروجيكتور ... 🔮';
+            
+            setTimeout(() => {
+              label.textContent = '📡 يبتعد للخلف ... 📡';
+              robot.style.left = '42%';
+              robot.style.top = '58%';
+              robot.style.transform = 'translate(-50%, -50%) scale(0.6)';
+              groundShadow.style.opacity = '0.3';
+              
+              setTimeout(() => {
+                label.textContent = '💫 تشغيل البروجيكتور ... 💫';
+                reactorCore.classList.add('projecting');
+                projectorBeam.classList.add('active');
+                updateBeamPosition();
+                head.classList.add('looking-up');
+                leftEye.classList.add('looking-up');
+                rightEye.classList.add('looking-up');
+                
+                hologramScreen.classList.add('show');
+                showTyping();
+                
+                // بعد 1.5 ثانية - إظهار مرحباً بيك
+                setTimeout(() => {
+                  showWelcomeMessage();
+                  
+                  // بعد 2.5 ثانية - العودة للـ typing ثم رسالة هل أنت جاهز
+                  setTimeout(() => {
+                    showTyping();
+                    
+                    setTimeout(() => {
+                      showReadyPrompt();
+                    }, 1000);
+                    
+                  }, 2500);
+                  
+                }, 1500);
+                
+              }, 800);
+            }, 500);
+          }
+        }, 170);
+      }, 600);
+      
+    }, 4000);
+    
+    // تفاعل العيون
+    document.querySelectorAll('.eye').forEach(eye => {
+      eye.addEventListener('click', function() {
+        if (!this.classList.contains('closed')) {
+          const baseY = this.classList.contains('looking-up') ? 6 : 10;
+          this.style.transform = `translateY(${baseY}px) scale(1.05)`;
+          setTimeout(() => this.style.transform = `translateY(${baseY}px) scale(1)`, 200);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
