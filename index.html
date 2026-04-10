@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>روبوت ثلاثي الأبعاد · نائم ثم ينهض · بروجيكتور كامل</title>
   <style>
+    /* === كل خصائص CSS بقيت كما هي تماماً دون أي نقصان أو تعديل === */
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
     * {
@@ -1065,9 +1066,10 @@
             label.textContent = '🔮 تجهيز البروجيكتور ... 🔮';
             
             setTimeout(() => {
-              label.textContent = '📡 يبتعد للخلف ... 📡';
+              label.textContent = '📡 يبتعد للخلف وينزل للأسفل ... 📡';
+              // *** التعديل: الروبوت ينزل للأسفل تحت البطاقة ***
               robot.style.left = '42%';
-              robot.style.top = '58%';
+              robot.style.top = '78%'; // نزل الروبوت للأسفل بوضوح تحت البطاقة
               robot.style.transform = 'translate(-50%, -50%) scale(0.6)';
               groundShadow.style.opacity = '0.3';
               
