@@ -1,576 +1,711 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>3D Robot · Projector Signals</title>
+  <title>روبوت المحلل الذكي · جولة تعليمية</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
-    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
 
     body {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       background: radial-gradient(ellipse at 30% 40%, #0a0f1e 0%, #03060c 100%);
-      overflow: hidden; font-family: 'Cairo', 'Inter', sans-serif; cursor: default; position: relative;
+      overflow: hidden;
+      font-family: 'Cairo', sans-serif;
+      cursor: default;
+      position: relative;
     }
 
+    /* ========== الروبوت الأساسي (CSS الأصلي مع تعديلات بسيطة) ========== */
     .robot-container {
-      position: absolute; display: flex; flex-direction: column; align-items: center;
-      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
       will-change: left, top, transform;
-      left: 50%; top: 50%;
+      left: 50%;
+      top: 50%;
       transform: translate(-50%, -50%) scale(0.65);
-      transition: left 1.2s cubic-bezier(0.34,1.2,0.64,1), top 1.2s cubic-bezier(0.34,1.2,0.64,1), transform 1.2s cubic-bezier(0.34,1.2,0.64,1), opacity 0.8s ease;
+      transition: left 1.2s cubic-bezier(0.34, 1.2, 0.64, 1), top 1.2s cubic-bezier(0.34, 1.2, 0.64, 1), transform 1.2s cubic-bezier(0.34, 1.2, 0.64, 1);
       z-index: 100;
     }
-    .robot-container.hidden { opacity: 0; pointer-events: none; }
 
+    /* الرأس */
     .head {
-      width: 180px; height: 145px;
+      width: 180px;
+      height: 145px;
       background: radial-gradient(ellipse at 30% 25%, #f0f8ff 0%, #c5d5e8 25%, #9eb8d4 50%, #7a9bbf 75%, #5a7fa8 100%);
       border-radius: 60px 60px 55px 55px;
-      position: relative; display: flex; align-items: center; justify-content: center;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       box-shadow: 0 30px 45px rgba(0,0,0,0.6), 0 15px 20px rgba(0,0,0,0.4), inset -8px -12px 18px rgba(0,0,0,0.25), inset 12px 15px 25px rgba(255,255,255,0.8), inset -3px -3px 8px rgba(0,0,0,0.15), 0 0 0 1.5px rgba(255,255,255,0.4), 0 0 0 3px rgba(100,150,200,0.15);
-      z-index: 20; transition: transform 1s cubic-bezier(0.34,1.2,0.64,1);
+      z-index: 20;
+      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1);
       transform-origin: center 80%;
     }
+
     .head.sleeping { transform: rotate(25deg); }
     .head.looking-up { transform: rotate(-12deg); }
+
     .head::before {
-      content: ''; position: absolute; top: 10px; left: 25px; width: 85px; height: 45px;
+      content: '';
+      position: absolute;
+      top: 10px;
+      left: 25px;
+      width: 85px;
+      height: 45px;
       background: radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 50%, transparent 80%);
-      border-radius: 50%; filter: blur(8px); transform: rotate(-15deg); opacity: 0.9;
-    }
-    .head::after {
-      content: ''; position: absolute; bottom: 15px; right: 18px; width: 50px; height: 30px;
-      background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, rgba(200,220,255,0.2) 60%, transparent 90%);
-      border-radius: 50%; filter: blur(6px); transform: rotate(20deg);
+      border-radius: 50%;
+      filter: blur(8px);
+      transform: rotate(-15deg);
+      opacity: 0.9;
     }
 
-    .ear-module { position: absolute; top: 55px; width: 24px; height: 45px; z-index: 19; }
+    .head::after {
+      content: '';
+      position: absolute;
+      bottom: 15px;
+      right: 18px;
+      width: 50px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.5) 0%, rgba(200,220,255,0.2) 60%, transparent 90%);
+      border-radius: 50%;
+      filter: blur(6px);
+      transform: rotate(20deg);
+    }
+
+    /* الأذنان */
+    .ear-module {
+      position: absolute;
+      top: 55px;
+      width: 24px;
+      height: 45px;
+      z-index: 19;
+    }
     .ear-module.left { left: -22px; }
     .ear-module.right { right: -22px; }
+
     .ear-main {
-      width: 22px; height: 36px;
+      width: 22px;
+      height: 36px;
       background: radial-gradient(ellipse at 35% 30%, #8ab8e8 0%, #4a8ec5 40%, #2a6bb0 70%, #1a4a8a 100%);
       border-radius: 10px 10px 8px 8px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.5), inset 3px 3px 8px rgba(255,255,255,0.6);
-      border-left: 1px solid rgba(255,255,255,0.5); position: relative; margin: 0;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(0, 0, 0, 0.3), inset -1px -2px 5px rgba(0, 0, 0, 0.35), inset 3px 3px 8px rgba(255, 255, 255, 0.6), inset -1px -1px 3px rgba(0, 0, 0, 0.2);
+      border-left: 1px solid rgba(255, 255, 255, 0.5);
+      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      position: relative;
+      margin: 0;
     }
+
     .horn-pill {
-      width: 12px; height: 26px;
-      background: linear-gradient(145deg, #6aacf0, #0e3d7a);
-      border-radius: 6px 6px 4px 4px; position: absolute; top: -20px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.5); border-left: 1px solid rgba(255,255,255,0.4);
+      width: 12px;
+      height: 26px;
+      background: linear-gradient(145deg, #6aacf0 0%, #3a7ec5 35%, #1a5aa0 70%, #0e3d7a 100%);
+      border-radius: 6px 6px 4px 4px;
+      position: absolute;
+      top: -20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3), inset -1px -1px 3px rgba(0, 0, 0, 0.3), inset 1px 1px 5px rgba(255, 255, 255, 0.5);
+      border-left: 1px solid rgba(255, 255, 255, 0.4);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
     }
+
     .ear-module.left .horn-pill { left: 2px; transform: rotate(-25deg); transform-origin: bottom right; }
     .ear-module.right .horn-pill { right: 2px; transform: rotate(25deg); transform-origin: bottom left; }
 
+    /* الشاشة */
     .screen {
-      width: 155px; height: 108px;
-      background: linear-gradient(145deg, #0e1218 0%, #020305 100%);
-      border-radius: 38px; display: flex; align-items: center; justify-content: center; gap: 20px;
+      width: 155px;
+      height: 108px;
+      background: linear-gradient(145deg, #0e1218 0%, #080a0e 40%, #05070a 70%, #020305 100%);
+      border-radius: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
       border: 1.5px solid #2a6f9f;
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.95), 0 0 20px rgba(0,242,255,0.3);
-      position: relative; overflow: hidden;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.95), inset 0 5px 15px rgba(0,0,0,0.7), inset 0 -5px 10px rgba(0,242,255,0.1), 0 0 20px rgba(0,242,255,0.3), 0 10px 25px rgba(0,0,0,0.5), 0 0 0 2px rgba(50,100,150,0.3);
+      position: relative;
+      overflow: hidden;
     }
+
     .screen::before {
-      content: ''; position: absolute; width: 100%; height: 100%;
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
       background: repeating-linear-gradient(45deg, rgba(0,242,255,0.04) 0px, rgba(0,242,255,0.04) 2px, transparent 2px, transparent 8px);
-      animation: scan 8s linear infinite; border-radius: 38px;
+      animation: scan 8s linear infinite;
+      border-radius: 38px;
     }
-    @keyframes scan { 0% { background-position: 0 0; } 100% { background-position: 50px 50px; } }
-    .bracket { position: absolute; width: 14px; height: 14px; border: 2px solid #0cf; opacity: 0.9; filter: drop-shadow(0 0 6px #0cf); z-index: 2; }
+
+    @keyframes scan {
+      0% { background-position: 0 0; }
+      100% { background-position: 50px 50px; }
+    }
+
+    .bracket {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border: 2px solid #0cf;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px #0cf) drop-shadow(0 0 12px rgba(0,204,255,0.5));
+      z-index: 2;
+    }
     .tl { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
     .tr { top: 12px; right: 12px; border-left: 0; border-bottom: 0; }
     .bl { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
     .br { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
 
-    .eye { width: 44px; height: 32px; position: relative; transform: translateY(10px); cursor: pointer; transition: all 0.2s ease; }
-    .eye::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      border: 5px solid #0cf; border-color: #0cf transparent transparent transparent;
-      border-radius: 50%; filter: drop-shadow(0 0 15px #0cf); animation: blink 4s infinite;
-      transform: scaleX(0.85); transition: all 0.3s ease;
+    /* العيون */
+    .eye {
+      width: 44px;
+      height: 32px;
+      position: relative;
+      transform: translateY(10px);
+      cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .eye.closed::before { border: 5px solid #0cf; border-color: transparent transparent #0cf transparent; border-radius: 50%; transform: scaleX(0.85) scaleY(0.15); animation: none; }
-    .eye.looking-up::before { transform: scaleX(0.85) translateY(-4px); border-color: #0cf transparent transparent transparent; }
+
+    .eye::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 5px solid #0cf;
+      border-color: #0cf transparent transparent transparent;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 15px #0cf);
+      animation: blink 4s infinite;
+      transform: scaleX(0.85);
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,0.3), 0 2px 5px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .eye.closed::before {
+      border: 5px solid #0cf;
+      border-color: transparent transparent #0cf transparent;
+      border-radius: 50%;
+      transform: scaleX(0.85) scaleY(0.15);
+      filter: drop-shadow(0 0 8px #0cf);
+      animation: none;
+    }
+
+    .eye.looking-up::before {
+      transform: scaleX(0.85) translateY(-4px);
+      border-color: #0cf transparent transparent transparent;
+    }
+
     .eye::after {
-      content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
-      width: 8px; height: 8px; background: radial-gradient(circle, #aaffff 0%, #0cf 50%, #0099cc 100%);
-      border-radius: 50%; filter: blur(3px); animation: pulse 1.5s infinite; box-shadow: 0 0 15px #0cf;
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #aaffff 0%, #0cf 50%, #0099cc 100%);
+      border-radius: 50%;
+      filter: blur(3px);
+      animation: pulse 1.5s infinite;
+      box-shadow: 0 0 15px #0cf;
       transition: opacity 0.3s ease, bottom 0.3s ease;
     }
+
     .eye.looking-up::after { bottom: 0px; }
     .eye.closed::after { opacity: 0; }
 
-    @keyframes blink { 0%, 94%, 100% { opacity: 1; transform: scaleY(1) scaleX(0.85); } 97% { opacity: 0.3; transform: scaleY(0.05) scaleX(0.85); } }
-    @keyframes pulse { 0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); } 50% { opacity: 1; transform: translateX(-50%) scale(1.4); } }
+    @keyframes blink {
+      0%, 94%, 100% { opacity: 1; transform: scaleY(1) scaleX(0.85); }
+      97% { opacity: 0.3; transform: scaleY(0.05) scaleX(0.85); }
+    }
 
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      50% { opacity: 1; transform: translateX(-50%) scale(1.4); }
+    }
+
+    /* Zzz */
     .sleep-zzz {
-      position: absolute; top: -40px; right: -30px; display: flex; flex-direction: column;
-      align-items: center; opacity: 0; transition: opacity 0.8s ease; z-index: 25;
+      position: absolute;
+      top: -40px;
+      right: -30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 25;
     }
     .sleep-zzz.show { opacity: 1; }
+
     .z-letter {
-      color: #0cf; font-family: 'Cairo', sans-serif; font-weight: 900;
-      text-shadow: 0 0 20px #0cf; filter: drop-shadow(0 0 5px rgba(0,204,255,0.8));
+      color: #0cf;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 900;
+      font-size: 28px;
+      text-shadow: 0 0 20px #0cf, 0 0 40px #0cf;
+      filter: drop-shadow(0 0 5px rgba(0,204,255,0.8));
       animation: floatZ 2s ease-in-out infinite;
     }
     .z-letter:nth-child(1) { font-size: 18px; opacity: 0.6; animation-delay: 0s; }
     .z-letter:nth-child(2) { font-size: 24px; opacity: 0.8; animation-delay: 0.3s; }
     .z-letter:nth-child(3) { font-size: 30px; opacity: 1; animation-delay: 0.6s; }
-    @keyframes floatZ { 0%, 100% { transform: translateY(0) rotate(-10deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
 
-    .body-group { margin-top: -28px; position: relative; display: flex; flex-direction: column; align-items: center; }
+    @keyframes floatZ {
+      0%, 100% { transform: translateY(0) rotate(-10deg); }
+      50% { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    /* الجسم */
+    .body-group {
+      margin-top: -28px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .head-to-body-shadow {
-      position: absolute; top: 0; width: 110px; height: 25px;
-      background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, transparent 100%);
-      filter: blur(12px); z-index: 15; border-radius: 50%;
-    }
-    .vest-blue {
-      width: 145px; height: 95px;
-      background: radial-gradient(ellipse at 25% 25%, #8ab8ff 0%, #1a4a8a 80%, #0e2d5a 100%);
-      border-radius: 55px 55px 40px 40px; z-index: 10;
-      display: flex; justify-content: center; align-items: center; padding-top: 18px;
-      box-shadow: 0 20px 35px rgba(0,0,0,0.5), inset 10px 12px 20px rgba(255,255,255,0.5); position: relative;
-    }
-    .vest-blue::before {
-      content: ''; position: absolute; top: 10px; left: 20px; width: 50px; height: 30px;
-      background: radial-gradient(ellipse, rgba(255,255,255,0.4) 0%, transparent 70%);
-      border-radius: 50%; filter: blur(6px); transform: rotate(-15deg);
-    }
-    .reactor-core {
-      width: 45px; height: 45px;
-      background: radial-gradient(circle at 35% 35%, #fff 0%, #0cf 70%, #0099cc 100%);
+      position: absolute;
+      top: 0;
+      width: 110px;
+      height: 25px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 70%, transparent 100%);
+      filter: blur(12px);
+      z-index: 15;
       border-radius: 50%;
-      box-shadow: 0 0 30px #0cf, 0 0 60px #0cf, inset 0 0 15px rgba(255,255,255,0.9);
-      border: 3px solid #8cc9ff; animation: reactorPulse 2s ease-in-out infinite;
-      position: relative; transition: box-shadow 0.5s ease;
     }
-    .reactor-core.projecting { box-shadow: 0 0 60px #0cf, 0 0 120px #0cf, 0 0 180px #5a9eff, inset 0 0 20px #fff; animation: reactorPulseProjecting 1.5s ease-in-out infinite; }
-    .reactor-core::before {
-      content: ''; position: absolute; top: 50%; left: 50%; width: 18px; height: 18px;
-      background: radial-gradient(circle, #fff 0%, #aaffff 60%, transparent 100%);
-      border-radius: 50%; transform: translate(-50%, -50%); filter: blur(5px); box-shadow: 0 0 20px #fff;
+
+    .vest-blue {
+      width: 145px;
+      height: 95px;
+      background: radial-gradient(ellipse at 25% 25%, #8ab8ff 0%, #5a9ad5 30%, #2a6fcf 55%, #1a4a8a 80%, #0e2d5a 100%);
+      border-radius: 55px 55px 40px 40px;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 18px;
+      box-shadow: 0 20px 35px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3), inset -6px -8px 15px rgba(0,0,0,0.35), inset 10px 12px 20px rgba(255,255,255,0.5), 0 0 0 2px rgba(100,150,220,0.2);
+      position: relative;
     }
-    @keyframes reactorPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-    @keyframes reactorPulseProjecting { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.15); } }
+
+    .reactor-core {
+      width: 45px;
+      height: 45px;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #d4f4ff 30%, #8ae4ff 50%, #0cf 70%, #0099cc 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 30px #0cf, 0 0 60px #0cf, inset 0 0 15px rgba(255,255,255,0.9), inset -2px -2px 8px rgba(0,0,0,0.3), 0 5px 15px rgba(0,0,0,0.4);
+      border: 3px solid #8cc9ff;
+      animation: reactorPulse 2s ease-in-out infinite;
+      position: relative;
+      transition: box-shadow 0.5s ease;
+    }
+
+    .reactor-core.projecting {
+      box-shadow: 0 0 60px #0cf, 0 0 120px #0cf, 0 0 180px #5a9eff, inset 0 0 20px #fff;
+      animation: reactorPulseProjecting 1.5s ease-in-out infinite;
+    }
+
+    @keyframes reactorPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 25px #0cf, 0 0 50px #0cf; }
+      50% { transform: scale(1.08); box-shadow: 0 0 45px #0cf, 0 0 80px #0cf; }
+    }
+
+    @keyframes reactorPulseProjecting {
+      0%, 100% { transform: scale(1.05); box-shadow: 0 0 50px #0cf, 0 0 100px #0cf, 0 0 150px #5a9eff; }
+      50% { transform: scale(1.15); box-shadow: 0 0 80px #0cf, 0 0 150px #5a9eff, 0 0 200px #aaffff; }
+    }
 
     .belly-white {
-      width: 125px; height: 125px;
-      background: radial-gradient(ellipse at 30% 30%, #fff 0%, #a0b4cc 100%);
-      border-radius: 50% 50% 55% 55% / 45% 45% 55% 55%; margin-top: -65px; z-index: 5;
-      box-shadow: 0 25px 40px rgba(0,0,0,0.45), inset 12px 14px 25px rgba(255,255,255,0.8); position: relative;
+      width: 125px;
+      height: 125px;
+      background: radial-gradient(ellipse at 30% 30%, #ffffff 0%, #e8f0fa 30%, #d0deef 55%, #b8c8e0 75%, #a0b4cc 100%);
+      border-radius: 50% 50% 55% 55% / 45% 45% 55% 55%;
+      margin-top: -65px;
+      z-index: 5;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.45), 0 15px 25px rgba(0,0,0,0.3), inset -8px -10px 20px rgba(0,0,0,0.15), inset 12px 14px 25px rgba(255,255,255,0.8), 0 0 0 2px rgba(255,255,255,0.3);
+      position: relative;
     }
 
+    /* الأذرع */
     .arm {
-      position: absolute; width: 55px; height: 105px; z-index: 12;
-      transform-origin: top center; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4));
-      transition: transform 0.2s cubic-bezier(0.34,1.2,0.64,1);
+      position: absolute;
+      width: 55px;
+      height: 105px;
+      z-index: 12;
+      transform-origin: top center;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.4));
+      transition: transform 0.2s cubic-bezier(0.34, 1.2, 0.64, 1);
     }
+
     .arm.waving { left: -44px; top: 25px; }
     .arm.idle { right: -44px; top: 25px; }
-    .arm.sleeping { transition: transform 0.8s cubic-bezier(0.34,1.2,0.64,1); }
+    .arm.sleeping { transition: transform 0.8s cubic-bezier(0.34, 1.2, 0.64, 1); }
     .arm.waving.sleeping { transform: rotate(15deg) translateY(15px); }
     .arm.idle.sleeping { transform: rotate(-20deg) translateY(15px); }
+
     .shoulder-blue {
-      width: 100%; height: 60%;
-      background: radial-gradient(ellipse at 30% 25%, #7ab0f0 0%, #1a4a8a 100%);
+      width: 100%;
+      height: 60%;
+      background: radial-gradient(ellipse at 30% 25%, #7ab0f0 0%, #4a8ad5 40%, #2a6fcf 70%, #1a4a8a 100%);
       border-radius: 55% 55% 45% 45%;
-      box-shadow: 0 14px 22px rgba(0,0,0,0.45); position: relative;
+      box-shadow: 0 14px 22px rgba(0,0,0,0.45), 0 8px 12px rgba(0,0,0,0.3), inset -4px -5px 10px rgba(0,0,0,0.3), inset 6px 7px 15px rgba(255,255,255,0.6);
+      position: relative;
     }
+
     .forearm-white {
-      width: 75%; height: 45%;
-      background: radial-gradient(ellipse at 35% 30%, #f8fcff 0%, #b0c4e0 100%);
-      border-radius: 35% 35% 50% 50%; margin: -8px auto 0;
-      box-shadow: 0 12px 20px rgba(0,0,0,0.35);
-      position: relative; transform: perspective(200px) rotateX(5deg);
+      width: 75%;
+      height: 45%;
+      background: radial-gradient(ellipse at 35% 30%, #f8fcff 0%, #e0ecf8 40%, #c8d8f0 70%, #b0c4e0 100%);
+      border-radius: 35% 35% 50% 50%;
+      margin: -8px auto 0;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.35), 0 6px 10px rgba(0,0,0,0.25), inset -3px -4px 10px rgba(0,0,0,0.15), inset 5px 5px 12px rgba(255,255,255,0.8);
+      position: relative;
+      transform: perspective(200px) rotateX(5deg);
     }
 
     .ground-shadow {
-      width: 180px; height: 30px;
-      background: radial-gradient(ellipse, rgba(0,0,0,0.8) 0%, transparent 100%);
-      border-radius: 50%; filter: blur(18px); margin-top: 35px; transition: opacity 0.5s ease;
+      width: 180px;
+      height: 30px;
+      background: radial-gradient(ellipse, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+      border-radius: 50%;
+      filter: blur(18px);
+      margin-top: 35px;
+      transition: opacity 0.5s ease;
     }
 
-    .tech-particles { position: fixed; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-    .particle {
-      position: absolute; width: 2px; height: 2px; background: #0cf; border-radius: 50%; opacity: 0;
-      animation: particleFloat 4s infinite; box-shadow: 0 0 8px #0cf;
-    }
-    @keyframes particleFloat { 0% { opacity: 0; transform: translateY(0) scale(0); } 20% { opacity: 0.9; } 100% { opacity: 0; transform: translateY(-80px) scale(1.5); } }
-    @keyframes floatAfter { 0%, 100% { transform: translate(-50%, -50%) scale(0.65) translateY(0px); } 50% { transform: translate(-50%, -50%) scale(0.65) translateY(-20px); } }
-    .robot-container.float-active { animation: floatAfter 3s ease-in-out infinite; }
-
-    /* ===== HOLOGRAM SCREEN ===== */
+    /* ========== شاشة البروجيكتور (العد التنازلي) ========== */
     .hologram-screen {
-      position: absolute; top: 16%; left: 50%;
+      position: absolute;
+      top: 16%;
+      left: 50%;
       transform: translateX(-50%) scale(0);
-      width: 380px; min-height: 220px;
-      background: rgba(0,242,255,0.04); backdrop-filter: blur(12px);
-      border-radius: 30px; border: 1.5px solid rgba(0,242,255,0.5);
-      box-shadow: 0 0 60px rgba(0,242,255,0.3), inset 0 0 40px rgba(0,242,255,0.08);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 200; opacity: 0;
-      transition: transform 1s cubic-bezier(0.34,1.2,0.64,1), opacity 0.6s ease, width 1s ease, height 1s ease, border-radius 1s ease, top 1s ease;
-      pointer-events: none; padding: 24px 20px;
+      width: 380px;
+      min-height: 220px;
+      background: rgba(0, 242, 255, 0.04);
+      backdrop-filter: blur(12px);
+      border-radius: 30px;
+      border: 1.5px solid rgba(0, 242, 255, 0.5);
+      box-shadow: 0 0 60px rgba(0, 242, 255, 0.3), 0 0 120px rgba(0, 150, 255, 0.15), inset 0 0 40px rgba(0, 242, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.34, 1.2, 0.64, 1), opacity 0.6s ease;
+      pointer-events: none;
+      padding: 24px 20px;
     }
-    .hologram-screen.show { transform: translateX(-50%) scale(1); opacity: 1; pointer-events: auto; }
-    .hologram-screen.fullscreen {
-      width: 94vw; height: 85vh; top: 50%;
-      transform: translateX(-50%) translateY(-50%) scale(1); border-radius: 28px;
+
+    .hologram-screen.show {
+      transform: translateX(-50%) scale(1);
+      opacity: 1;
+      pointer-events: auto;
     }
-    .hologram-screen.compact {
-      width: 300px; height: auto; top: 7%;
-      transform: translateX(-50%) scale(1); border-radius: 20px; padding: 0;
-    }
+
     .hologram-screen::before {
-      content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+      content: '';
+      position: absolute;
+      top: -2px; left: -2px; right: -2px; bottom: -2px;
       background: linear-gradient(135deg, #0cf, #5a9eff, #aaffff, #0cf);
-      border-radius: 32px; opacity: 0.2; z-index: -1; filter: blur(10px);
-    }
-    .holo-content { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; position: relative; z-index: 2; }
-    .holo-message { font-size: 48px; font-weight: 900; color: #fff; text-shadow: 0 0 30px #0cf, 0 0 60px #0cf; letter-spacing: 5px; background: linear-gradient(135deg, #fff, #d4f4ff, #aaffff); -webkit-background-clip: text; background-clip: text; color: transparent; animation: glowText 3s infinite alternate; margin: 0; text-align: center; }
-    .holo-sub-message { font-size: 24px; font-weight: 700; color: rgba(170,255,255,0.95); text-shadow: 0 0 20px #0cf; text-align: center; }
-    .holo-goodbye { font-size: 36px; font-weight: 900; color: #fff; text-shadow: 0 0 30px #0cf; letter-spacing: 3px; }
-    @keyframes glowText { 0% { text-shadow: 0 0 30px #0cf; } 100% { text-shadow: 0 0 50px #5a9eff, 0 0 90px #aaffff; } }
-    .typing-indicator { display: flex; gap: 10px; padding: 15px 0; }
-    .typing-dot { width: 14px; height: 14px; background: #0cf; border-radius: 50%; box-shadow: 0 0 20px #0cf; animation: typingBounce 1.4s infinite ease-in-out; }
-    .typing-dot:nth-child(1) { animation-delay: 0s; } .typing-dot:nth-child(2) { animation-delay: 0.2s; } .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-15px); opacity: 1; } }
-    .holo-button {
-      background: rgba(0,242,255,0.12); border: 1.5px solid rgba(0,242,255,0.7);
-      border-radius: 40px; padding: 12px 36px; color: #fff; font-size: 20px; font-weight: 700; letter-spacing: 3px;
-      cursor: pointer; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(0,242,255,0.3);
-      transition: all 0.3s ease; margin-top: 10px; text-shadow: 0 0 12px #0cf; font-family: 'Cairo', sans-serif;
-    }
-    .holo-button:hover { background: rgba(0,242,255,0.25); box-shadow: 0 0 50px #0cf; transform: scale(1.05); }
-    .key-input-container { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 340px; padding: 10px; }
-    .key-input-container label { color: rgba(170,255,255,0.9); font-size: 18px; font-weight: 700; text-shadow: 0 0 12px rgba(0,204,255,0.5); }
-    .key-input-field {
-      width: 100%; padding: 14px 20px; background: rgba(0,242,255,0.06);
-      border: 1.5px solid rgba(0,242,255,0.5); border-radius: 16px; color: #fff; font-size: 18px;
-      font-family: 'Cairo', monospace; letter-spacing: 4px; text-align: center; outline: none;
-      backdrop-filter: blur(6px); transition: all 0.3s ease; direction: ltr;
-    }
-    .key-input-field::placeholder { color: rgba(0,242,255,0.3); font-size: 14px; }
-    .key-input-field:focus { border-color: #0cf; box-shadow: 0 0 30px rgba(0,242,255,0.3); }
-    .key-error { color: #ff6b6b; font-size: 14px; min-height: 20px; opacity: 0; transition: opacity 0.3s ease; }
-    .key-error.show { opacity: 1; }
-
-    /* ===== PROFESSIONAL SIGNAL CARD - FULLSCREEN ===== */
-    .sig-card-fs {
-      width: 100%; max-width: 480px;
-      background: linear-gradient(170deg, rgba(6,18,35,0.97) 0%, rgba(2,8,20,0.99) 100%);
-      border: 1px solid rgba(0,242,255,0.3);
-      border-radius: 24px;
-      position: relative;
-      overflow: hidden;
-      opacity: 0; transform: scale(0.85) translateY(30px);
-      transition: all 1s cubic-bezier(0.34,1.2,0.64,1);
-    }
-    .sig-card-fs.show { opacity: 1; transform: scale(1) translateY(0); }
-
-    .sig-card-fs::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, #0cf 20%, #5a9eff 50%, #0cf 80%, transparent);
-      animation: shimmerBar 3s linear infinite;
-    }
-    @keyframes shimmerBar { 0% { background-position: -300px 0; } 100% { background-position: 300px 0; } }
-
-    .sig-card-fs::after {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,242,255,0.015) 3px, rgba(0,242,255,0.015) 4px);
-      pointer-events: none; border-radius: 24px;
+      border-radius: 32px;
+      opacity: 0.2;
+      z-index: -1;
+      filter: blur(10px);
     }
 
-    .sc-fs-header {
-      text-align: center; padding: 28px 24px 20px;
-      border-bottom: 1px solid rgba(0,242,255,0.12);
-      position: relative;
-    }
-    .sc-fs-header::after {
-      content: ''; position: absolute; bottom: -1px; left: 15%; right: 15%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,242,255,0.5), transparent);
-    }
-    .sc-fs-brand {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 40px; font-weight: 900;
-      letter-spacing: 8px;
-      background: linear-gradient(135deg, #ffffff 0%, #0cf 40%, #5a9eff 60%, #0cf 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      text-shadow: none;
-      filter: drop-shadow(0 0 20px rgba(0,204,255,0.3));
-      display: flex; align-items: center; justify-content: center; gap: 14px;
-      line-height: 1.2;
-    }
-    .sc-fs-brand .diamond-icon { width: 34px; height: 34px; filter: drop-shadow(0 0 12px #0cf); }
-
-    .sc-fs-edition {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 12px; font-weight: 600; letter-spacing: 6px;
-      color: #ffd700; margin-top: 8px;
-      text-shadow: 0 0 15px rgba(255,215,0,0.4);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-    }
-    .sc-fs-edition .trophy-icon { width: 18px; height: 18px; filter: drop-shadow(0 0 6px rgba(255,215,0,0.6)); }
-
-    .sc-fs-body { padding: 24px 30px; }
-
-    .sc-fs-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 18px; margin-bottom: 8px;
-      background: rgba(0,242,255,0.03);
-      border: 1px solid rgba(0,242,255,0.08);
-      border-radius: 14px;
-      transition: all 0.3s ease;
-    }
-    .sc-fs-row:hover { background: rgba(0,242,255,0.06); border-color: rgba(0,242,255,0.2); }
-    .sc-fs-row:last-child { margin-bottom: 0; }
-
-    .sc-fs-row-label {
-      display: flex; align-items: center; gap: 10px;
-      color: rgba(170,255,255,0.7); font-size: 14px; font-weight: 600; letter-spacing: 1px;
-      font-family: 'Inter', sans-serif; text-transform: uppercase;
-    }
-    .sc-fs-row-label .row-icon { width: 20px; height: 20px; filter: drop-shadow(0 0 6px #0cf); }
-
-    .sc-fs-row-value {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 18px; font-weight: 700; letter-spacing: 2px; direction: ltr;
+    /* محتوى المؤقت */
+    .timer-display {
+      font-size: 64px;
+      font-weight: 900;
       color: #fff;
+      text-shadow: 0 0 30px #0cf;
+      font-family: 'Courier New', monospace; /* رقمي */
+      margin-bottom: 10px;
     }
-    .sc-fs-row-value.buy { color: #00ff88; text-shadow: 0 0 20px rgba(0,255,136,0.5); }
-    .sc-fs-row-value.sell { color: #ff4466; text-shadow: 0 0 20px rgba(255,68,102,0.5); }
 
-    .sc-fs-footer {
-      text-align: center; padding: 20px 24px 24px;
-      border-top: 1px solid rgba(0,242,255,0.12);
+    .status-text {
+      font-size: 20px;
+      color: #aaffff;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    .holo-button {
+      background: rgba(0, 242, 255, 0.12);
+      border: 1.5px solid rgba(0, 242, 255, 0.7);
+      border-radius: 40px;
+      padding: 12px 36px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 30px rgba(0, 242, 255, 0.3), inset 0 0 12px rgba(0, 242, 255, 0.2);
+      transition: all 0.3s ease;
+      text-shadow: 0 0 12px #0cf;
+    }
+
+    .holo-button:hover {
+      background: rgba(0, 242, 255, 0.25);
+      box-shadow: 0 0 50px #0cf, inset 0 0 15px #fff;
+      transform: scale(1.05);
+      border-color: #aaffff;
+    }
+
+    .holo-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+    /* ========== وضع الشاشة الكاملة (الجولة التعليمية) ========== */
+    .fullscreen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #0b1021 0%, #000000 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+    }
+
+    .fullscreen-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      width: 90%;
+      max-width: 500px;
       position: relative;
     }
-    .sc-fs-footer::before {
-      content: ''; position: absolute; top: -1px; left: 15%; right: 15%; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,242,255,0.5), transparent);
+
+    .data-card {
+      background: rgba(16, 26, 46, 0.8);
+      border: 1px solid rgba(0, 242, 255, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
-    .sc-fs-footer-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px; font-weight: 500; color: rgba(0,242,255,0.4);
-      letter-spacing: 4px;
+    
+    .data-card.highlight {
+      border-color: #0cf;
+      box-shadow: 0 0 20px rgba(0, 242, 255, 0.4) inset, 0 0 20px rgba(0, 242, 255, 0.3);
+      background: rgba(0, 242, 255, 0.05);
     }
 
-    /* ===== COMPACT CARD ===== */
-    .sig-card-cp {
-      width: 100%; max-width: 280px;
-      background: linear-gradient(170deg, rgba(6,18,35,0.95) 0%, rgba(2,8,20,0.98) 100%);
-      border: 1px solid rgba(0,242,255,0.25);
-      border-radius: 18px;
-      position: relative; overflow: hidden;
-      opacity: 0; transform: scale(0.85);
-      transition: all 0.8s cubic-bezier(0.34,1.2,0.64,1);
-    }
-    .sig-card-cp.show { opacity: 1; transform: scale(1); }
-    .sig-card-cp::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, #0cf 30%, #5a9eff 50%, #0cf 70%, transparent);
+    .card-label {
+      color: #8ab8d4;
+      font-size: 14px;
+      margin-bottom: 4px;
     }
 
-    .sc-cp-close {
-      position: absolute; top: 8px; right: 8px; width: 26px; height: 26px;
-      background: rgba(255,68,102,0.15); border: 1px solid rgba(255,68,102,0.3);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.3s ease; z-index: 5;
+    .card-value {
+      color: #fff;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: left;
     }
-    .sc-cp-close:hover { background: rgba(255,68,102,0.35); }
-    .sc-cp-close svg { width: 12px; height: 12px; }
 
-    .sc-cp-header {
-      text-align: center; padding: 14px 16px 10px;
-      border-bottom: 1px solid rgba(0,242,255,0.1);
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 242, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #0cf;
     }
-    .sc-cp-brand {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 18px; font-weight: 800; letter-spacing: 4px;
-      background: linear-gradient(135deg, #fff 0%, #0cf 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .sc-cp-brand .diamond-icon { width: 16px; height: 16px; filter: drop-shadow(0 0 6px #0cf); }
 
-    .sc-cp-body { padding: 12px 14px; }
-    .sc-cp-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 6px 0; border-bottom: 1px solid rgba(0,242,255,0.06);
+    /* الروبوت المصغر */
+    .mini-robot-wrapper {
+      position: absolute;
+      z-index: 10000;
+      pointer-events: none; /* للسماح بالتفاعل مع الخلفية */
+      transition: top 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95), left 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      transform: scale(0.25); /* تصغير الروبوت جداً */
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.8));
     }
-    .sc-cp-row:last-child { border-bottom: none; }
-    .sc-cp-row-label {
-      display: flex; align-items: center; gap: 6px;
-      color: rgba(170,255,255,0.6); font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
-      font-family: 'Inter', sans-serif; text-transform: uppercase;
-    }
-    .sc-cp-row-label .row-icon { width: 12px; height: 12px; filter: drop-shadow(0 0 4px #0cf); }
-    .sc-cp-row-value {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 11px; font-weight: 700; letter-spacing: 1px; direction: ltr; color: #fff;
-    }
-    .sc-cp-row-value.buy { color: #00ff88; text-shadow: 0 0 8px rgba(0,255,136,0.4); }
 
-    .sc-cp-footer {
-      text-align: center; padding: 8px 14px 10px;
-      border-top: 1px solid rgba(0,242,255,0.1);
+    /* فقاعة الكلام */
+    .speech-bubble {
+      position: absolute;
+      bottom: 140px; /* فوق الرأس مباشرة بالنسبة للروبوت المصغر */
+      left: 50%;
+      transform: translateX(-50%) scale(4); /* تكبير الفقاعة لأن الروبوت مصغر */
+      background: #fff;
+      color: #0a0f1e;
+      padding: 10px 15px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      min-width: 150px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
-    .sc-cp-footer-text {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 8px; font-weight: 600; color: #ffd700;
-      text-shadow: 0 0 8px rgba(255,215,0,0.3); letter-spacing: 3px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+    
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px 6px 0;
+      border-style: solid;
+      border-color: #fff transparent transparent transparent;
     }
-    .sc-cp-footer-text .trophy-icon { width: 12px; height: 12px; }
 
-    /* ===== BOTTOM NAV ===== */
-    .bottom-nav {
-      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 20px; align-items: center; z-index: 300;
-      opacity: 0; pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease;
+    .speech-bubble.visible {
+      opacity: 1;
+      transform: translateX(-50%) scale(4);
     }
-    .bottom-nav.show { opacity: 1; pointer-events: auto; }
-    .bottom-nav.hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(20px); }
-    .nav-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      background: rgba(0,242,255,0.08); border: 1px solid rgba(0,242,255,0.3);
-      border-radius: 14px; padding: 8px 16px; cursor: pointer; transition: all 0.3s ease;
-      backdrop-filter: blur(6px);
-    }
-    .nav-btn:hover { background: rgba(0,242,255,0.18); border-color: #0cf; box-shadow: 0 0 20px rgba(0,242,255,0.3); transform: translateY(-3px); }
-    .nav-btn svg { width: 20px; height: 20px; filter: drop-shadow(0 0 6px #0cf); }
-    .nav-btn span { color: rgba(170,255,255,0.9); font-size: 11px; font-weight: 700; letter-spacing: 1px; }
 
-    /* ===== RESULTS PAGE ===== */
-    .page-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(3,6,12,0.97); z-index: 500;
-      display: flex; flex-direction: column; align-items: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.5s ease; overflow-y: auto;
+    /* تأثيرات الحركة للمصغر */
+    .mini-robot-wrapper .head {
+      animation: miniHeadBob 2s infinite ease-in-out;
     }
-    .page-overlay.show { opacity: 1; pointer-events: auto; }
-    .page-header {
-      width: 100%; display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 24px; border-bottom: 1px solid rgba(0,242,255,0.2);
-      position: sticky; top: 0; background: rgba(3,6,12,0.95); backdrop-filter: blur(10px); z-index: 10;
+    
+    @keyframes miniHeadBob {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(5deg); }
     }
-    .page-title {
-      font-size: 22px; font-weight: 900; color: #fff; text-shadow: 0 0 15px #0cf;
-      letter-spacing: 2px; display: flex; align-items: center; gap: 10px;
-    }
-    .page-close-btn {
-      width: 40px; height: 40px; background: rgba(255,68,102,0.15);
-      border: 1px solid rgba(255,68,102,0.4); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.3s ease;
-    }
-    .page-close-btn:hover { background: rgba(255,68,102,0.3); }
-    .page-close-btn svg { width: 18px; height: 18px; }
-    .page-body { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
 
-    .signal-item {
-      background: linear-gradient(145deg, rgba(0,20,40,0.8), rgba(0,10,25,0.9));
-      border: 1px solid rgba(0,242,255,0.25); border-radius: 16px; padding: 16px 20px;
-      display: flex; flex-direction: column; gap: 8px;
-      opacity: 0; transform: translateY(20px); transition: all 0.4s ease;
+    /* Tech Particles & Label */
+    .tech-particles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
     }
-    .signal-item.show { opacity: 1; transform: translateY(0); }
-    .signal-item-header { display: flex; align-items: center; justify-content: space-between; }
-    .signal-item-pair { font-size: 18px; font-weight: 900; color: #fff; direction: ltr; font-family: 'Orbitron', sans-serif; }
-    .signal-item-direction { padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 900; }
-    .signal-item-direction.buy { background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.4); }
-    .signal-item-direction.sell { background: rgba(255,68,102,0.15); color: #ff4466; border: 1px solid rgba(255,68,102,0.4); }
-    .signal-item-details { display: flex; gap: 16px; font-size: 13px; color: rgba(170,255,255,0.7); }
-    .signal-item-details span { display: flex; align-items: center; gap: 4px; }
-    .signal-item-result { text-align: center; padding-top: 8px; border-top: 1px solid rgba(0,242,255,0.1); }
-    .signal-item-result.win { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); }
-    .signal-item-result.loss { color: #ff4466; text-shadow: 0 0 10px rgba(255,68,102,0.4); }
 
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-    .stat-card {
-      background: linear-gradient(145deg, rgba(0,20,40,0.8), rgba(0,10,25,0.9));
-      border: 1px solid rgba(0,242,255,0.25); border-radius: 16px; padding: 18px 16px;
-      text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #0cf;
+      border-radius: 50%;
+      opacity: 0;
+      animation: particleFloat 4s infinite;
+      box-shadow: 0 0 8px #0cf;
     }
-    .stat-card svg { width: 24px; height: 24px; }
-    .stat-value { font-size: 28px; font-weight: 900; }
-    .stat-value.green { color: #00ff88; text-shadow: 0 0 15px rgba(0,255,136,0.4); }
-    .stat-value.red { color: #ff4466; text-shadow: 0 0 15px rgba(255,68,102,0.4); }
-    .stat-value.cyan { color: #0cf; text-shadow: 0 0 15px rgba(0,204,255,0.4); }
-    .stat-label { font-size: 12px; color: rgba(170,255,255,0.6); font-weight: 700; }
-    .results-list { width: 100%; display: flex; flex-direction: column; gap: 10px; }
+
+    @keyframes particleFloat {
+      0% { opacity: 0; transform: translateY(0) scale(0); }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+    }
+
+    .tech-label {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(0, 242, 255, 0.9);
+      font-family: 'Cairo', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      background: linear-gradient(145deg, rgba(0,20,40,0.7), rgba(0,10,20,0.8));
+      padding: 6px 18px;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,242,255,0.5);
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 300;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+      text-shadow: 0 0 10px #0cf;
+    }
 
     .projector-beam {
-      position: absolute; width: 0; height: 0;
-      background: linear-gradient(0deg, rgba(0,242,255,0.5) 0%, rgba(100,200,255,0.2) 60%, transparent 100%);
-      filter: blur(8px); z-index: 150; pointer-events: none;
-      opacity: 0; transition: opacity 0.5s ease; mix-blend-mode: screen;
+      position: absolute;
+      width: 0;
+      height: 0;
+      background: linear-gradient(0deg, rgba(0, 242, 255, 0.5) 0%, rgba(100, 200, 255, 0.2) 60%, transparent 100%);
+      filter: blur(8px);
+      z-index: 150;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      mix-blend-mode: screen;
+      border-radius: 50% 50% 0 0;
     }
     .projector-beam.active { opacity: 1; }
 
     @media (max-width: 600px) {
       .robot-container { transform: translate(-50%, -50%) scale(0.5); }
-      .hologram-screen.compact { width: 250px; top: 5%; }
-      .sc-cp-brand { font-size: 15px; letter-spacing: 3px; }
-      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .stat-value { font-size: 22px; }
-      .page-body { padding: 14px; }
-      .bottom-nav { gap: 14px; }
-      .sc-fs-brand { font-size: 28px; letter-spacing: 5px; }
-      .sc-fs-body { padding: 16px 18px; }
-      .sc-fs-row { padding: 10px 14px; }
-      .sc-fs-row-label { font-size: 12px; }
-      .sc-fs-row-value { font-size: 14px; }
+      .hologram-screen { width: 320px; }
+      .timer-display { font-size: 48px; }
+      .analysis-grid { width: 95%; }
     }
   </style>
 </head>
 <body>
-  <div class="hologram-screen" id="hologramScreen">
-    <div class="holo-content" id="holoContent">
-      <div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>
-    </div>
-  </div>
-  <div class="projector-beam" id="projectorBeam"></div>
 
-  <div class="page-overlay" id="resultsPage">
-    <div class="page-header">
-      <div class="page-title">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-        Results
-      </div>
-      <div class="page-close-btn" onclick="closeResultsPage()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </div>
-    </div>
-    <div class="page-body" id="resultsContent"></div>
-  </div>
+  <!-- طبقة الجسيمات -->
+  <div class="tech-particles" id="particles"></div>
+  <div class="tech-label" id="statusLabel">😴 الروبوت نائم ... 😴</div>
 
-  <div class="bottom-nav" id="bottomNav">
-    <div class="nav-btn" id="navResults">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
-      <span>Results</span>
-    </div>
-  </div>
-
+  <!-- الروبوت الرئيسي -->
   <div class="robot-container" id="robot">
     <div class="sleep-zzz" id="sleepZzz">
-      <span class="z-letter">Z</span><span class="z-letter">z</span><span class="z-letter">z</span>
+      <span class="z-letter">Z</span>
+      <span class="z-letter">z</span>
+      <span class="z-letter">z</span>
     </div>
+
     <div class="head" id="head">
       <div class="ear-module left"><div class="ear-main"></div><div class="horn-pill"></div></div>
       <div class="ear-module right"><div class="ear-main"></div><div class="horn-pill"></div></div>
       <div class="screen">
-        <div class="bracket tl"></div><div class="bracket tr"></div><div class="bracket bl"></div><div class="bracket br"></div>
-        <div class="eye" id="leftEye"></div><div class="eye" id="rightEye"></div>
+        <div class="bracket tl"></div><div class="bracket tr"></div>
+        <div class="bracket bl"></div><div class="bracket br"></div>
+        <div class="eye" id="leftEye"></div>
+        <div class="eye" id="rightEye"></div>
       </div>
     </div>
+
     <div class="body-group">
       <div class="head-to-body-shadow"></div>
       <div class="arm waving" id="rightArm"><div class="shoulder-blue"></div><div class="forearm-white"></div></div>
@@ -580,395 +715,338 @@
     </div>
     <div class="ground-shadow" id="groundShadow"></div>
   </div>
-  <div class="tech-particles" id="particles"></div>
+
+  <!-- شعاع البروجيكتور -->
+  <div class="projector-beam" id="projectorBeam"></div>
+
+  <!-- شاشة البروجيكتور (المؤقت) -->
+  <div class="hologram-screen" id="hologramScreen">
+    <div class="timer-display" id="timerDisplay">20</div>
+    <div class="status-text" id="statusText">الجلسة لم تبدأ بعد</div>
+    <button class="holo-button" id="startBtn" disabled>اذهب لتعلم</button>
+  </div>
+
+  <!-- وضع الشاشة الكاملة (التجربة التعليمية) -->
+  <div class="fullscreen-overlay" id="fullscreenOverlay">
+    <!-- سيتم نسخ الروبوت هنا بواسطة JS -->
+    
+    <div class="analysis-grid" id="analysisGrid">
+      <!-- بطاقة 1: اسم العملة -->
+      <div class="data-card" id="card-currency">
+        <div>
+          <div class="card-label">زوج العملة</div>
+          <div class="card-value">BTC / USD</div>
+        </div>
+        <div class="card-icon">₿</div>
+      </div>
+
+      <!-- بطاقة 2: وقت ودخول السعر -->
+      <div class="data-card" id="card-entry">
+        <div>
+          <div class="card-label">وقت الدخول / السعر</div>
+          <div class="card-value">64,230.50 $</div>
+        </div>
+        <div class="card-icon">📊</div>
+      </div>
+
+      <!-- بطاقة 3: الاتجاه -->
+      <div class="data-card" id="card-direction">
+        <div>
+          <div class="card-label">الاتجاه المتوقع</div>
+          <div class="card-value" style="color: #0f0;">تصاعدي 📈</div>
+        </div>
+        <div class="card-icon">⬆️</div>
+      </div>
+
+      <!-- بطاقة 4: المدة -->
+      <div class="data-card" id="card-duration">
+        <div>
+          <div class="card-label">مدة الصفقة</div>
+          <div class="card-value">4 ساعات</div>
+        </div>
+        <div class="card-icon">⏳</div>
+      </div>
+    </div>
+  </div>
 
   <script>
+    // إنشاء الجسيمات
     function createParticles() {
-      const c = document.getElementById('particles');
+      const container = document.getElementById('particles');
       for (let i = 0; i < 35; i++) {
-        const p = document.createElement('div');
-        p.classList.add('particle');
-        const s = Math.random() * 3 + 1.5;
-        p.style.width = s + 'px'; p.style.height = s + 'px';
-        p.style.left = Math.random() * 100 + '%'; p.style.top = Math.random() * 100 + '%';
-        p.style.animationDelay = Math.random() * 5 + 's';
-        p.style.animationDuration = Math.random() * 3 + 2 + 's';
-        p.style.background = `radial-gradient(circle, #0cf, ${Math.random() > 0.5 ? '#5a9eff' : '#aaffff'})`;
-        p.style.boxShadow = `0 0 ${s * 3}px #0cf`;
-        c.appendChild(p);
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 3 + 1.5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        particle.style.background = `radial-gradient(circle, #0cf, ${Math.random() > 0.5 ? '#5a9eff' : '#aaffff'})`;
+        particle.style.boxShadow = `0 0 ${size * 3}px #0cf`;
+        container.appendChild(particle);
       }
     }
     createParticles();
 
+    // متغيرات العناصر
     const robot = document.getElementById('robot');
     const head = document.getElementById('head');
     const rightArm = document.getElementById('rightArm');
     const leftArm = document.getElementById('leftArm');
     const leftEye = document.getElementById('leftEye');
     const rightEye = document.getElementById('rightEye');
+    const label = document.getElementById('statusLabel');
     const sleepZzz = document.getElementById('sleepZzz');
     const reactorCore = document.getElementById('reactorCore');
     const hologramScreen = document.getElementById('hologramScreen');
     const projectorBeam = document.getElementById('projectorBeam');
     const groundShadow = document.getElementById('groundShadow');
-    const holoContent = document.getElementById('holoContent');
-    const bottomNav = document.getElementById('bottomNav');
-
-    robot.style.left = '50%'; robot.style.top = '50%';
+    
+    const timerDisplay = document.getElementById('timerDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const fullscreenOverlay = document.getElementById('fullscreenOverlay');
+    
+    // وضعية البداية
+    robot.style.left = '50%';
+    robot.style.top = '50%';
     robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
     head.classList.add('sleeping');
-    leftEye.classList.add('closed'); rightEye.classList.add('closed');
-    rightArm.classList.add('sleeping'); leftArm.classList.add('sleeping');
+    leftEye.classList.add('closed');
+    rightEye.classList.add('closed');
+    rightArm.classList.add('sleeping');
+    leftArm.classList.add('sleeping');
     rightArm.style.transform = 'rotate(15deg) translateY(15px)';
     leftArm.style.transform = 'rotate(-20deg) translateY(15px)';
     sleepZzz.classList.add('show');
+    label.textContent = '😴 الروبوت نائم ... 4 ثواني 😴';
 
+    // تحديث الشعاع
     function updateBeamPosition() {
       if (!projectorBeam.classList.contains('active')) return;
-      const rR = reactorCore.getBoundingClientRect();
-      const sR = hologramScreen.getBoundingClientRect();
-      const dx = (sR.left + sR.width / 2) - (rR.left + rR.width / 2);
-      const dy = (sR.top + sR.height / 2) - (rR.top + rR.height / 2);
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const ang = Math.atan2(dy, dx) * 180 / Math.PI;
-      projectorBeam.style.width = dist + 'px';
+      const reactorRect = reactorCore.getBoundingClientRect();
+      const screenRect = hologramScreen.getBoundingClientRect();
+      const startX = reactorRect.left + reactorRect.width / 2;
+      const startY = reactorRect.top + reactorRect.height / 2;
+      const endX = screenRect.left + screenRect.width / 2;
+      const endY = screenRect.top + screenRect.height / 2;
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
+      projectorBeam.style.width = distance + 'px';
       projectorBeam.style.height = '10px';
-      projectorBeam.style.left = (rR.left + rR.width / 2) + 'px';
-      projectorBeam.style.top = (rR.top + rR.height / 2 - 5) + 'px';
-      projectorBeam.style.transform = `rotate(${ang}deg)`;
+      projectorBeam.style.left = startX + 'px';
+      projectorBeam.style.top = startY - 5 + 'px';
+      projectorBeam.style.transform = `rotate(${angle}deg)`;
       projectorBeam.style.transformOrigin = '0 50%';
     }
+    
     let beamInterval;
-    function startBeamUpdate() { if (beamInterval) clearInterval(beamInterval); beamInterval = setInterval(updateBeamPosition, 50); }
+    function startBeamUpdate() {
+      if (beamInterval) clearInterval(beamInterval);
+      beamInterval = setInterval(updateBeamPosition, 50);
+    }
     startBeamUpdate();
     window.addEventListener('resize', updateBeamPosition);
 
-    function setHolo(html) { holoContent.innerHTML = html; }
-    function showTyping() { setHolo('<div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>'); }
-    function showWelcome() { setHolo('<div class="holo-message">Welcome</div>'); }
+    // ========== منطق العد التنازلي والبدء ==========
+    let timeLeft = 20;
+    let countdownInterval;
 
-    function showReadyPrompt() {
-      setHolo(`<div class="holo-sub-message">Are you ready to start?</div><button class="holo-button" id="readyButton">Continue</button>`);
-      document.getElementById('readyButton').addEventListener('click', showKeyInput);
+    function startCountdown() {
+      startBtn.disabled = true;
+      startBtn.textContent = 'انتظر...';
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          timerDisplay.textContent = "ابدأ الآن";
+          startBtn.disabled = false;
+          startBtn.textContent = "اذهب لتعلم";
+          label.textContent = "⚡ الجلسة جاهزة للبدء ⚡";
+        }
+      }, 1000);
     }
 
-    function showKeyInput() {
-      setHolo(`<div class="key-input-container">
-        <label>Enter Access Key</label>
-        <input type="text" class="key-input-field" id="keyInputField" placeholder="••••••••" maxlength="20" />
-        <div class="key-error" id="keyError">Invalid key, try again</div>
-        <button class="holo-button" id="enterKeyBtn">Enter</button>
-      </div>`);
-      const inp = document.getElementById('keyInputField');
-      const btn = document.getElementById('enterKeyBtn');
-      const err = document.getElementById('keyError');
-      inp.focus();
-      function tryEnter() {
-        if (inp.value.trim().length > 0) { activateFullscreenCard(); }
-        else { err.classList.add('show'); inp.style.borderColor = '#ff4466'; setTimeout(() => { err.classList.remove('show'); inp.style.borderColor = 'rgba(0,242,255,0.5)'; }, 2000); }
-      }
-      btn.addEventListener('click', tryEnter);
-      inp.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
-    }
+    startBtn.addEventListener('click', () => {
+      // إخفاء العناصر القديمة
+      hologramScreen.classList.remove('show');
+      projectorBeam.classList.remove('active');
+      reactorCore.classList.remove('projecting');
+      
+      // تفعيل الشاشة الكاملة
+      fullscreenOverlay.classList.add('active');
+      
+      // إنشاء وبدء الروبوت المصغر
+      initMiniRobotTour();
+    });
 
-    let fullscreenTimeout;
-    function getEntryTime() { const n = new Date(); return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`; }
+    // ========== منطق الروبوت المصغر والجولة ==========
+    function initMiniRobotTour() {
+      // 1. استنساخ الروبوت
+      const originalRobot = document.getElementById('robot');
+      const miniRobotWrapper = document.createElement('div');
+      miniRobotWrapper.className = 'mini-robot-wrapper';
+      miniRobotWrapper.innerHTML = originalRobot.innerHTML; // نسخ المحتوى الداخلي
+      
+      // إضافة فقاعة الكلام
+      const speechBubble = document.createElement('div');
+      speechBubble.className = 'speech-bubble';
+      speechBubble.id = 'miniSpeech';
+      miniRobotWrapper.appendChild(speechBubble);
+      
+      // تحريك الروبوت المصغر لخارج الشاشة في البداية
+      miniRobotWrapper.style.top = '-100px';
+      miniRobotWrapper.style.left = '50%';
+      
+      fullscreenOverlay.appendChild(miniRobotWrapper);
 
-    function activateFullscreenCard() {
-      hologramScreen.classList.add('fullscreen');
-      bottomNav.classList.add('show');
-      showSignalCard(true);
-      if (fullscreenTimeout) clearTimeout(fullscreenTimeout);
-      fullscreenTimeout = setTimeout(() => { shrinkCard(); }, 10000);
-    }
-
-    function showSignalCard(isFullscreen) {
-      const t = getEntryTime();
-      if (isFullscreen) {
-        setHolo(`
-          <div class="sig-card-fs" id="sigCardMain">
-            <div class="sc-fs-header">
-              <div class="sc-fs-brand">
-                <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6,3 18,3 22,9 12,22 2,9"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="12" y1="22" x2="6" y2="9"/><line x1="12" y1="22" x2="18" y2="9"/><line x1="6" y1="3" x2="10" y2="9"/><line x1="18" y1="3" x2="14" y2="9"/></svg>
-                QX ZERO
-                <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6,3 18,3 22,9 12,22 2,9"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="12" y1="22" x2="6" y2="9"/><line x1="12" y1="22" x2="18" y2="9"/><line x1="6" y1="3" x2="10" y2="9"/><line x1="18" y1="3" x2="14" y2="9"/></svg>
-              </div>
-              <div class="sc-fs-edition">
-                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                ROYAL GOLD EDITION
-                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-              </div>
-            </div>
-            <div class="sc-fs-body">
-              <div class="sc-fs-row">
-                <div class="sc-fs-row-label">
-                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                  Asset Pair
-                </div>
-                <div class="sc-fs-row-value">USDTRY-OTC</div>
-              </div>
-              <div class="sc-fs-row">
-                <div class="sc-fs-row-label">
-                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-                  Timeframe
-                </div>
-                <div class="sc-fs-row-value">1 MINUTE</div>
-              </div>
-              <div class="sc-fs-row">
-                <div class="sc-fs-row-label">
-                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                  Entry Time
-                </div>
-                <div class="sc-fs-row-value">${t}</div>
-              </div>
-              <div class="sc-fs-row">
-                <div class="sc-fs-row-label">
-                  <svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
-                  Trade Direction
-                </div>
-                <div class="sc-fs-row-value buy">BUY</div>
-              </div>
-            </div>
-            <div class="sc-fs-footer">
-              <div class="sc-fs-footer-text">AI-POWERED SIGNAL SYSTEM · V2.0</div>
-            </div>
-          </div>
-        `);
-        setTimeout(() => { const c = document.getElementById('sigCardMain'); if (c) c.classList.add('show'); }, 300);
-      } else {
-        setHolo(`
-          <div class="sig-card-cp" id="sigCardMain">
-            <div class="sc-cp-close" id="compactClose">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </div>
-            <div class="sc-cp-header">
-              <div class="sc-cp-brand">
-                <svg class="diamond-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><polygon points="6,3 18,3 22,9 12,22 2,9"/><line x1="2" y1="9" x2="22" y2="9"/></svg>
-                QX ZERO
-              </div>
-            </div>
-            <div class="sc-cp-body">
-              <div class="sc-cp-row">
-                <div class="sc-cp-row-label"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Pair</div>
-                <div class="sc-cp-row-value">USDTRY-OTC</div>
-              </div>
-              <div class="sc-cp-row">
-                <div class="sc-cp-row-label"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>Timeframe</div>
-                <div class="sc-cp-row-value">1 MIN</div>
-              </div>
-              <div class="sc-cp-row">
-                <div class="sc-cp-row-label"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Entry</div>
-                <div class="sc-cp-row-value">${t}</div>
-              </div>
-              <div class="sc-cp-row">
-                <div class="sc-cp-row-label"><svg class="row-icon" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>Direction</div>
-                <div class="sc-cp-row-value buy">BUY</div>
-              </div>
-            </div>
-            <div class="sc-cp-footer">
-              <div class="sc-cp-footer-text">
-                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                ROYAL GOLD
-                <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="#ffd700" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-              </div>
-            </div>
-          </div>
-        `);
-        setTimeout(() => {
-          const c = document.getElementById('sigCardMain');
-          if (c) { c.style.opacity = '1'; c.style.transform = 'scale(1)'; }
-          const xBtn = document.getElementById('compactClose');
-          if (xBtn) xBtn.addEventListener('click', startGoodbyeSequence);
-        }, 300);
-      }
-    }
-
-    function shrinkCard() {
-      hologramScreen.classList.remove('fullscreen');
-      hologramScreen.classList.add('compact');
-      robot.classList.remove('hidden');
-      groundShadow.style.opacity = '1';
-      robot.classList.add('float-active');
-      bottomNav.classList.remove('hidden');
-      bottomNav.classList.add('show');
-      showSignalCard(false);
-    }
-
-    // ===== GOODBYE SEQUENCE =====
-    function startGoodbyeSequence() {
-      // 1. Hide hologram screen first so waving is visible
-      hologramScreen.classList.remove('compact', 'fullscreen', 'show');
-      bottomNav.classList.remove('show');
-      bottomNav.classList.add('hidden');
-
-      setTimeout(() => {
-        // 2. Start waving and move robot back to center simultaneously
-        let waveCt = 0;
-        const totalWaveDuration = 3000;
-        const waveSpeed = 250;
-        const waveCount = Math.floor(totalWaveDuration / waveSpeed);
-
-        const wv = setInterval(() => {
-          if (waveCt < waveCount) {
-            rightArm.style.transform = waveCt % 2 === 0 ? 'rotate(110deg)' : 'rotate(15deg)';
-            waveCt++;
-          } else {
-            clearInterval(wv);
-            rightArm.style.transform = 'rotate(15deg)';
-          }
-        }, waveSpeed);
-
-        // Head tilts down, eyes close
-        head.classList.remove('looking-up');
-        head.classList.add('sleeping');
-        leftEye.classList.remove('looking-up');
-        rightEye.classList.remove('looking-up');
-        leftEye.classList.add('closed');
-        rightEye.classList.add('closed');
-
-        // Robot returns to center
-        robot.style.left = '50%';
-        robot.style.top = '50%';
-        robot.style.transform = 'translate(-50%, -50%) scale(0.65)';
-        groundShadow.style.opacity = '1';
-        robot.classList.remove('float-active');
-
-        // After movement completes, stop waving and show Zzz
-        setTimeout(() => {
-          clearInterval(wv);
-          rightArm.style.transform = 'rotate(15deg)';
-          leftArm.style.transform = 'rotate(-20deg)';
-          rightArm.classList.add('sleeping');
-          leftArm.classList.add('sleeping');
-          rightArm.style.transform = 'rotate(15deg) translateY(15px)';
-          leftArm.style.transform = 'rotate(-20deg) translateY(15px)';
-
-          projectorBeam.classList.remove('active');
-          reactorCore.classList.remove('projecting');
-
-          // Show Zzz after waving stops
-          sleepZzz.classList.add('show');
-        }, totalWaveDuration + 800);
-
-      }, 300);
-    }
-
-    function openResultsPage() {
-      const page = document.getElementById('resultsPage');
-      const content = document.getElementById('resultsContent');
-      content.innerHTML = `
-        <div class="stats-grid">
-          <div class="stat-card">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            <div class="stat-value green">87%</div>
-            <div class="stat-label">Win Rate</div>
-          </div>
-          <div class="stat-card">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-            <div class="stat-value cyan">24</div>
-            <div class="stat-label">Total Trades</div>
-          </div>
-          <div class="stat-card">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#00ff88" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>
-            <div class="stat-value green">21</div>
-            <div class="stat-label">Wins</div>
-          </div>
-          <div class="stat-card">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#ff4466" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
-            <div class="stat-value red">3</div>
-            <div class="stat-label">Losses</div>
-          </div>
-        </div>
-        <div style="text-align:center;margin-top:8px;margin-bottom:4px;"><span style="color:rgba(170,255,255,0.7);font-size:14px;font-weight:700;">Trade History</span></div>
-        <div class="results-list" id="resultsList"></div>
-      `;
-      page.classList.add('show');
-      const rd = [
-        { pair: 'USDTRY-OTC', dir: 'buy', time: '14:35', result: 'win', profit: '+$45' },
-        { pair: 'EURUSD-OTC', dir: 'sell', time: '14:20', result: 'win', profit: '+$38' },
-        { pair: 'GBPUSD-OTC', dir: 'buy', time: '14:05', result: 'win', profit: '+$52' },
-        { pair: 'USDJPY-OTC', dir: 'sell', time: '13:50', result: 'loss', profit: '-$20' },
-        { pair: 'AUDUSD-OTC', dir: 'buy', time: '13:35', result: 'win', profit: '+$41' },
-        { pair: 'NZDUSD-OTC', dir: 'sell', time: '13:20', result: 'win', profit: '+$35' },
-        { pair: 'USDCAD-OTC', dir: 'buy', time: '13:05', result: 'loss', profit: '-$18' },
-        { pair: 'EURGBP-OTC', dir: 'sell', time: '12:50', result: 'win', profit: '+$47' },
+      // 2. تعريف مراحل الجولة
+      const steps = [
+        { 
+          id: 'card-currency', 
+          text: 'أهلاً! سأعطيك مثالاً عن الإشارة. أولاً، اسم العملة هو BTC عملة رقمية قوية!',
+          offset: { x: 0, y: -50 } 
+        },
+        { 
+          id: 'card-entry', 
+          text: 'هنا نرى السعر الأنسب للدخول والوقت المحدد للشراء بدقة.',
+          offset: { x: 0, y: -50 }
+        },
+        { 
+          id: 'card-direction', 
+          text: 'السهم للأعلى يعني أن الاتجاه تصاعدي، أي أن السعر سيرتفع قريباً.',
+          offset: { x: 0, y: -50 }
+        },
+        { 
+          id: 'card-duration', 
+          text: 'وأخيراً، مدة الصفقة هي المدة التي سنحتفظ فيها بالصفقة لتحقيق الربح.',
+          offset: { x: 0, y: -50 }
+        }
       ];
-      const list = document.getElementById('resultsList');
-      let rhtml = '';
-      rd.forEach((r, i) => {
-        const dL = r.dir === 'buy' ? 'BUY' : 'SELL';
-        const rL = r.result === 'win' ? 'WIN' : 'LOSS';
-        rhtml += `<div class="signal-item" data-index="${i}">
-          <div class="signal-item-header"><span class="signal-item-pair">${r.pair}</span><span class="signal-item-direction ${r.dir}">${dL}</span></div>
-          <div class="signal-item-details">
-            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${r.time}</span>
-            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0cf" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/></svg>1 MIN</span>
-          </div>
-          <div class="signal-item-result ${r.result}">${rL} <span style="font-weight:900;font-size:16px;">${r.profit}</span></div>
-        </div>`;
-      });
-      list.innerHTML = rhtml;
-      setTimeout(() => { list.querySelectorAll('.signal-item').forEach((item, i) => { setTimeout(() => item.classList.add('show'), i * 100); }); }, 400);
+
+      let currentStep = 0;
+
+      // دالة لتحريك الروبوت
+      function moveToStep(index) {
+        if (index >= steps.length) {
+          // انتهت الجولة
+          document.getElementById('miniSpeech').textContent = "هل أنت مستعد لبدء التداول الحقيقي؟";
+          setTimeout(() => {
+             document.getElementById('miniSpeech').classList.add('visible');
+          }, 500);
+          return;
+        }
+
+        const step = steps[index];
+        const targetCard = document.getElementById(step.id);
+        
+        // إلغاء تحديد البطاقة السابقة
+        document.querySelectorAll('.data-card').forEach(c => c.classList.remove('highlight'));
+        
+        // تمييز البطاقة الحالية
+        targetCard.classList.add('highlight');
+
+        // حساب الموقع
+        const cardRect = targetCard.getBoundingClientRect();
+        const overlayRect = fullscreenOverlay.getBoundingClientRect();
+        
+        // الموقع النسبي داخل الـ Overlay
+        // نضع الروبوت بجانب البطاقة (يمين لأن الاتجاه RTL)
+        const targetX = (cardRect.right - overlayRect.left) + 40; 
+        const targetY = (cardRect.top - overlayRect.top) + (cardRect.height / 2);
+
+        // تحديث موقع الروبوت
+        miniRobotWrapper.style.left = `${targetX}px`;
+        miniRobotWrapper.style.top = `${targetY}px`;
+
+        // تحديث النص
+        const bubble = document.getElementById('miniSpeech');
+        bubble.classList.remove('visible');
+        
+        setTimeout(() => {
+          bubble.textContent = step.text;
+          bubble.classList.add('visible');
+        }, 600); // تأخير بسيط ليظهر النص بعد الوصول
+
+        // الخطوة التالية
+        currentStep++;
+        setTimeout(() => moveToStep(currentStep), 4500); // الانتقال كل 4.5 ثانية
+      }
+
+      // بدء الحركة بعد دخول الشاشة مباشرة
+      setTimeout(() => {
+        moveToStep(0);
+      }, 1000);
     }
 
-    function closeResultsPage() { document.getElementById('resultsPage').classList.remove('show'); }
-    document.getElementById('navResults').addEventListener('click', () => { openResultsPage(); });
-
-    // ===== BOOT SEQUENCE =====
+    // ========== تسلسل الاستيقاظ (كما كان سابقاً) ==========
     setTimeout(() => {
-      head.classList.remove('sleeping');
-      leftEye.classList.remove('closed'); rightEye.classList.remove('closed');
-      rightArm.classList.remove('sleeping'); leftArm.classList.remove('sleeping');
-      rightArm.style.transform = 'rotate(15deg)'; leftArm.style.transform = 'rotate(-20deg)';
+      label.textContent = '🌟 يستيقظ... ينهض 🌟';
       sleepZzz.classList.remove('show');
-
+      head.classList.remove('sleeping');
+      leftEye.classList.remove('closed');
+      rightEye.classList.remove('closed');
+      rightArm.classList.remove('sleeping');
+      leftArm.classList.remove('sleeping');
+      rightArm.style.transform = 'rotate(15deg)';
+      leftArm.style.transform = 'rotate(-20deg)';
+      
       setTimeout(() => {
-        let wc = 0;
-        const wi = setInterval(() => {
-          if (wc < 6) {
-            rightArm.style.transform = wc % 2 === 0 ? 'rotate(110deg)' : 'rotate(15deg)';
-            leftArm.style.transform = wc % 2 === 0 ? 'rotate(-100deg)' : 'rotate(-20deg)';
-            wc++;
+        label.textContent = '👋 مرحباً! يلوح بيده 👋';
+        let waveCount = 0;
+        const waveInterval = setInterval(() => {
+          if (waveCount < 6) {
+            rightArm.style.transform = waveCount % 2 === 0 ? 'rotate(110deg)' : 'rotate(15deg)';
+            leftArm.style.transform = waveCount % 2 === 0 ? 'rotate(-100deg)' : 'rotate(-20deg)';
+            waveCount++;
           } else {
-            clearInterval(wi);
+            clearInterval(waveInterval);
             rightArm.style.transform = 'rotate(15deg)';
             leftArm.style.transform = 'rotate(-20deg)';
+            
+            label.textContent = '🔮 تجهيز البروجيكتور ... 🔮';
             setTimeout(() => {
-              robot.style.left = '42%'; robot.style.top = '78%';
+              label.textContent = '📡 يبتعد للخلف ... 📡';
+              robot.style.left = '42%';
+              robot.style.top = '58%';
               robot.style.transform = 'translate(-50%, -50%) scale(0.6)';
               groundShadow.style.opacity = '0.3';
+              
               setTimeout(() => {
+                label.textContent = '💫 تشغيل العد التنازلي ... 💫';
                 reactorCore.classList.add('projecting');
                 projectorBeam.classList.add('active');
                 updateBeamPosition();
                 head.classList.add('looking-up');
-                leftEye.classList.add('looking-up'); rightEye.classList.add('looking-up');
+                leftEye.classList.add('looking-up');
+                rightEye.classList.add('looking-up');
                 hologramScreen.classList.add('show');
-                showTyping();
-                setTimeout(() => {
-                  showWelcome();
-                  setTimeout(() => {
-                    showTyping();
-                    setTimeout(() => { showReadyPrompt(); }, 1000);
-                  }, 2500);
-                }, 1500);
+                
+                // بدء المؤقت هنا
+                startCountdown();
               }, 800);
             }, 500);
           }
         }, 170);
       }, 600);
     }, 4000);
-
+    
+    // تفاعل بسيط للعيون في الصفحة الرئيسية
     document.querySelectorAll('.eye').forEach(eye => {
       eye.addEventListener('click', function() {
         if (!this.classList.contains('closed')) {
-          const by = this.classList.contains('looking-up') ? 6 : 10;
-          this.style.transform = `translateY(${by}px) scale(1.05)`;
-          setTimeout(() => this.style.transform = `translateY(${by}px) scale(1)`, 200);
+          const baseY = this.classList.contains('looking-up') ? 6 : 10;
+          this.style.transform = `translateY(${baseY}px) scale(1.05)`;
+          setTimeout(() => this.style.transform = `translateY(${baseY}px) scale(1)`, 200);
         }
       });
     });
+
   </script>
 </body>
 </html>
-
